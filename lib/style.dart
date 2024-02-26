@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class WidgetStyle {
-  final buttonBoxDecorator = BoxDecoration(
+  final buttonBoxDecorator = const BoxDecoration(
     color: Colors.blueGrey,
   );
 
   final mainHeading =
-      TextStyle(color: Color.fromARGB(250, 239, 238, 238), fontSize: 22);
+      const TextStyle(color: Color.fromARGB(250, 239, 238, 238), fontSize: 22);
 
-  final textInputDecorator = InputDecoration(
+  final textInputDecorator = const InputDecoration(
     focusColor: Colors.white,
     fillColor: Colors.white,
     hintText: "Email",
@@ -27,8 +27,8 @@ class WidgetStyle {
 
   final buttonStyle = ButtonStyle(
     padding: MaterialStateProperty.all(
-        EdgeInsets.symmetric(horizontal: 130, vertical: 20)),
+        const EdgeInsets.symmetric(horizontal: 130, vertical: 20)),
     backgroundColor: MaterialStateColor.resolveWith(
-        (states) => Color.fromARGB(255, 41, 65, 202)),
+        (states) => const Color.fromARGB(255, 41, 65, 202)),
   );
 }

@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/Register.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/recoverPassword.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/userModel.dart';
@@ -30,13 +29,13 @@ class _LoginPageState extends State<LoginPage> {
         child: Scrollable(
           viewportBuilder: (context, position) {
             return Padding(
-              padding: EdgeInsets.symmetric(horizontal: 30),
+              padding: const EdgeInsets.symmetric(horizontal: 30),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 60),
+                    padding: const EdgeInsets.symmetric(horizontal: 60),
                     height: 300,
                     width: 400,
                     child: Expanded(
@@ -46,20 +45,20 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   Container(
-                    child: Column(
+                    child: const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           "Let's Sign In.!",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 25,
                           ),
                         ),
-                        const SizedBox(
+                        SizedBox(
                           height: 10,
                         ),
-                        const Text(
+                        Text(
                           "Login to Your Account to Continue your Courses",
                           style: TextStyle(
                             fontSize: 13,
@@ -77,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           // Email Form Field
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(10),
@@ -88,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
                                         hintText: "Email",
                                       ),
                               validator: (value) {
-                                if (value!.isEmpty || value == null) {
+                                if (value!.isEmpty) {
                                   return "Email should not be empty";
                                 }
                                 // Add additional email validation if needed
@@ -101,10 +100,10 @@ class _LoginPageState extends State<LoginPage> {
                               },
                             ),
                           ),
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           // Password Form Field
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(10),
@@ -112,12 +111,12 @@ class _LoginPageState extends State<LoginPage> {
                             child: TextFormField(
                               decoration:
                                   WidgetStyle().textInputDecorator.copyWith(
-                                        prefixIcon: Icon(Icons.lock),
+                                        prefixIcon: const Icon(Icons.lock),
                                         hintText: "Password",
                                       ),
                               obscureText: true, // Hide the password text
                               validator: (value) {
-                                if (value!.isEmpty || value == null) {
+                                if (value!.isEmpty) {
                                   return "Password should not be empty";
                                 }
                                 // Additional validation logic for password if needed
@@ -168,7 +167,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: ElevatedButton(
                       style: WidgetStyle().buttonStyle,
                       onPressed: loginUser,
-                      child: Text(
+                      child: const Text(
                         "Sign In",
                         style: TextStyle(
                           color: Colors.white,
@@ -180,21 +179,21 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   const SizedBox(height: 20),
                   Container(
-                    padding: EdgeInsets.fromLTRB(50, 0, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(50, 0, 0, 0),
                     child: Text.rich(
                       TextSpan(
                         text: "Don't have an Account? ",
                         children: [
                           TextSpan(
                             text: "SIGN Up",
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: const Color.fromARGB(255, 5, 71, 125)),
+                                color: Color.fromARGB(255, 5, 71, 125)),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 WidgetStyle().NextScreen(
                                   context,
-                                  RegisterPage(),
+                                  const RegisterPage(),
                                 );
                               },
                           ),
@@ -215,59 +214,55 @@ class _LoginPageState extends State<LoginPage> {
     if (_formKey.currentState!.validate()) {
       showDialog(
         context: context,
-        builder: (context) => Center(
+        builder: (context) => const Center(
           child: CircularProgressIndicator(),
         ),
       );
-      final _auth = FirebaseAuth.instance;
-      final _cloud_firestore = FirebaseFirestore.instance;
+      final auth = FirebaseAuth.instance;
+      final cloudFirestore = FirebaseFirestore.instance;
       try {
-        final user_Credential = await _auth.signInWithEmailAndPassword(
+        final userCredential = await auth.signInWithEmailAndPassword(
             email: studentEmail, password: studentPassword);
         final studentModel = Student();
-        if (user_Credential != null) {
-          if (rememberMe) {
-            helperFunction.saveStudentEmail(studentEmail);
-            await _cloud_firestore
-                .collection("Students")
-                .where('email', isEqualTo: studentEmail)
-                .get()
-                .then((value) {
-              value.docs.forEach((element) {
-                setState(() {
-                  studentModel.setStudentData(
-                    uid: _auth.currentUser!.uid,
-                    student_name: element['name'],
-                    student_education: element['email'],
-                    student_email: studentEmail,
-                    student_phoneNumber: element['phoneNumber'],
-                  );
-                  // Print values of each field fetched from Firestore
-                  print("Name: ${element['name']}");
-                  print("Email: ${element['email']}");
-                  print("Phone Number: ${element['phoneNumber']}");
-                });
-              });
-              helperFunction.saveUserLogInStatus(true);
-              // Stop the loading indicator
-              Navigator.of(context).pop();
-              // Navigate to the next screen after fetching and setting data
-              WidgetStyle().NextScreen(
-                context,
-                homePage(),
+        if (rememberMe) {
+          helperFunction.saveStudentEmail(studentEmail);
+          helperFunction.saveUserLogInStatus(true);
+        }
+        await cloudFirestore
+            .collection("Students")
+            .where('email', isEqualTo: studentEmail)
+            .get()
+            .then((value) {
+          for (var element in value.docs) {
+            setState(() {
+              studentModel.setStudentData(
+                uid: auth.currentUser!.uid,
+                student_name: element['name'],
+                student_education: element['email'],
+                student_email: studentEmail,
+                student_phoneNumber: element['phoneNumber'],
               );
-            }).catchError((error) {
-              // Show error in Snackbar and stop loading
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text("Error fetching user data: $error"),
-                ),
-              );
-              Navigator.of(context).pop();
+              print("Name: ${element['name']}");
+              print("Email: ${element['email']}");
+              print("Phone Number: ${element['phoneNumber']}");
             });
           }
-        }
-      } on FirebaseAuthException catch (e) {
+          Navigator.of(context).pop();
+          WidgetStyle().NextScreen(
+            context,
+            const homePage(),
+          );
+        }).catchError(
+          (error) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Error fetching user data: $error"),
+              ),
+            );
+            Navigator.of(context).pop();
+          },
+        );
+            } on FirebaseAuthException catch (e) {
         // Show error in Snackbar and stop loading
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -282,7 +277,7 @@ class _LoginPageState extends State<LoginPage> {
   recoverPassword() {
     WidgetStyle().NextScreen(
       context,
-      RecoverPassowrdPage(),
+      const RecoverPassowrdPage(),
     );
   }
 }

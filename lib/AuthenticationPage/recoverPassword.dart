@@ -21,20 +21,20 @@ class _RecoverPassowrdPageState extends State<RecoverPassowrdPage> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           iconSize: 40,
         ),
         bottomOpacity: 20,
-        title: Text(
+        title: const Text(
           "Forgot Password",
         ),
       ),
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 40, vertical: 100),
+        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 100),
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               decoration: BoxDecoration(
                 border: Border.all(
                   width: 1,
@@ -46,7 +46,7 @@ class _RecoverPassowrdPageState extends State<RecoverPassowrdPage> {
                 key: _formKey,
                 child: TextFormField(
                   validator: (value) {
-                    if (value!.isEmpty || value == null) {
+                    if (value!.isEmpty) {
                       return "Email should not be empty";
                     }
                     // Add additional email validation if needed
@@ -61,7 +61,7 @@ class _RecoverPassowrdPageState extends State<RecoverPassowrdPage> {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 100,
             ),
             Container(
@@ -85,7 +85,7 @@ class _RecoverPassowrdPageState extends State<RecoverPassowrdPage> {
                         LengthLimitingTextInputFormatter(1),
                         FilteringTextInputFormatter.digitsOnly
                       ],
-                      decoration: InputDecoration(border: OutlineInputBorder()),
+                      decoration: const InputDecoration(border: OutlineInputBorder()),
                     ),
                   ),
                   SizedBox(
@@ -105,7 +105,7 @@ class _RecoverPassowrdPageState extends State<RecoverPassowrdPage> {
                         LengthLimitingTextInputFormatter(1),
                         FilteringTextInputFormatter.digitsOnly
                       ],
-                      decoration: InputDecoration(border: OutlineInputBorder()),
+                      decoration: const InputDecoration(border: OutlineInputBorder()),
                     ),
                   ),
                   SizedBox(
@@ -125,7 +125,7 @@ class _RecoverPassowrdPageState extends State<RecoverPassowrdPage> {
                         LengthLimitingTextInputFormatter(1),
                         FilteringTextInputFormatter.digitsOnly
                       ],
-                      decoration: InputDecoration(border: OutlineInputBorder()),
+                      decoration: const InputDecoration(border: OutlineInputBorder()),
                     ),
                   ),
                   SizedBox(
@@ -145,21 +145,21 @@ class _RecoverPassowrdPageState extends State<RecoverPassowrdPage> {
                         LengthLimitingTextInputFormatter(1),
                         FilteringTextInputFormatter.digitsOnly
                       ],
-                      decoration: InputDecoration(border: OutlineInputBorder()),
+                      decoration: const InputDecoration(border: OutlineInputBorder()),
                     ),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             Container(
               child: ElevatedButton(
                 style: WidgetStyle().buttonStyle.copyWith(
                       padding: MaterialStateProperty.all(
-                          EdgeInsets.symmetric(horizontal: 50, vertical: 20)),
+                          const EdgeInsets.symmetric(horizontal: 50, vertical: 20)),
                     ),
                 onPressed: recoverPassword,
-                child: Text(
+                child: const Text(
                   "Recover Password",
                   style: TextStyle(
                     color: Colors.white,
@@ -177,9 +177,9 @@ class _RecoverPassowrdPageState extends State<RecoverPassowrdPage> {
 
   Future recoverPassword() async {
     if (_formKey.currentState!.validate()) {
-      final _auth = FirebaseAuth.instance;
+      final auth = FirebaseAuth.instance;
       try {
-        await _auth.sendPasswordResetEmail(email: userEmail).then((value) {
+        await auth.sendPasswordResetEmail(email: userEmail).then((value) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text("Varification Email Send Successfully"),
