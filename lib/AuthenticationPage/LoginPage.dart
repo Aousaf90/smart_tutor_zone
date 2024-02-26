@@ -1,11 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/Register.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/recoverPassword.dart';
+import 'package:smart_tutor_zone/AuthenticationPage/userModel.dart';
 import 'package:smart_tutor_zone/Pages/homePage.dart';
 import 'package:smart_tutor_zone/helperFunction.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../style.dart';
 
 class LoginPage extends StatefulWidget {
@@ -34,10 +37,13 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 60),
-                    child: LottieBuilder.network(
-                        'https://assets3.lottiefiles.com/packages/lf20_MbephoYReu.json'),
                     height: 300,
-                    width: 300,
+                    width: 400,
+                    child: Expanded(
+                      flex: 8,
+                      child: SvgPicture.asset("images/login.svg",
+                          fit: BoxFit.contain),
+                    ),
                   ),
                   Container(
                     child: Column(
@@ -205,7 +211,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  loginUser() {
+  loginUser() async {
     if (_formKey.currentState!.validate()) {
       showDialog(
         context: context,
@@ -214,26 +220,61 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
       final _auth = FirebaseAuth.instance;
+      final _cloud_firestore = FirebaseFirestore.instance;
       try {
-        final user_Credential = _auth.signInWithEmailAndPassword(
+        final user_Credential = await _auth.signInWithEmailAndPassword(
             email: studentEmail, password: studentPassword);
-
+        final studentModel = Student();
         if (user_Credential != null) {
           if (rememberMe) {
             helperFunction.saveStudentEmail(studentEmail);
-            helperFunction.saveUserLogInStatus(true);
+            await _cloud_firestore
+                .collection("Students")
+                .where('email', isEqualTo: studentEmail)
+                .get()
+                .then((value) {
+              value.docs.forEach((element) {
+                setState(() {
+                  studentModel.setStudentData(
+                    uid: _auth.currentUser!.uid,
+                    student_name: element['name'],
+                    student_education: element['email'],
+                    student_email: studentEmail,
+                    student_phoneNumber: element['phoneNumber'],
+                  );
+                  // Print values of each field fetched from Firestore
+                  print("Name: ${element['name']}");
+                  print("Email: ${element['email']}");
+                  print("Phone Number: ${element['phoneNumber']}");
+                });
+              });
+              helperFunction.saveUserLogInStatus(true);
+              // Stop the loading indicator
+              Navigator.of(context).pop();
+              // Navigate to the next screen after fetching and setting data
+              WidgetStyle().NextScreen(
+                context,
+                homePage(),
+              );
+            }).catchError((error) {
+              // Show error in Snackbar and stop loading
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Error fetching user data: $error"),
+                ),
+              );
+              Navigator.of(context).pop();
+            });
           }
-          WidgetStyle().NextScreen(
-            context,
-            homePage(),
-          );
         }
       } on FirebaseAuthException catch (e) {
+        // Show error in Snackbar and stop loading
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Error Saving User Data"),
+          SnackBar(
+            content: Text("Firebase Authentication Error: ${e.message}"),
           ),
         );
+        Navigator.of(context).pop();
       }
     }
   }

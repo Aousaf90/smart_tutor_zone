@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/LoginPage.dart';
 import 'package:smart_tutor_zone/Pages/homePage.dart';
 import 'package:smart_tutor_zone/helperFunction.dart';
+import './userModel.dart';
 import '../style.dart';
 import 'package:lottie/lottie.dart';
 import '../firebaseModels.dart';
@@ -37,10 +41,13 @@ class _RegisterPageState extends State<RegisterPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                      padding: EdgeInsets.symmetric(horizontal: 60),
-                      child: LottieBuilder.network(
-                        'https://assets1.lottiefiles.com/packages/lf20_wWZd8QJ7Cj.json',
-                      )),
+                    padding: EdgeInsets.symmetric(horizontal: 60),
+                    child: Expanded(
+                      flex: 8,
+                      child: SvgPicture.asset("images/signup.svg",
+                          fit: BoxFit.contain),
+                    ),
+                  ),
                   Container(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,7 +71,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 10),
                   //Text Form Field for  Input and Validation
                   Container(
                     child: Form(
@@ -186,11 +193,11 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
                   Container(
                     child: Text("Terms and Conditions"),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
                   Container(
                     child: ElevatedButton(
                         style: ButtonStyle(
@@ -253,7 +260,7 @@ class _RegisterPageState extends State<RegisterPage> {
   //   );
   //   return [1, textFormField];
   // }
-  signUp() async {
+  Future<void> signUp() async {
     final _auth = FirebaseAuth.instance;
     if (_formKey.currentState!.validate()) {
       showDialog(
@@ -263,27 +270,40 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       );
       try {
-        _auth
+        await _auth
             .createUserWithEmailAndPassword(
                 email: studentEmail, password: studentPassword)
             .then(
           (value) {
             if (value != null) {
-              setState(() {
-                helperFunction.saveStudentEmail(studentEmail);
-                helperFunction.saveUserLogInStatus(true);
-              });
-              WidgetStyle().NextScreen(
-                context,
-                homePage(),
+              setState(
+                () {
+                  final uid = _auth.currentUser!.uid;
+                  final studentModel = Student();
+                  helperFunction.saveStudentEmail(studentEmail);
+                  helperFunction.saveUserLogInStatus(true);
+                  studentModel.setStudentData(
+                    uid: uid,
+                    student_name: studentName,
+                    student_email: studentEmail,
+                    student_education: studentEducation,
+                    student_phoneNumber: "03061310090",
+                  );
+                  studentModel.createStudentEntity();
+                },
               );
+              WidgetStyle().NextScreen(context, homePage());
             }
           },
         );
       } on FirebaseAuthException catch (e) {
+        // Dismiss the dialog
+        Navigator.of(context).pop();
+        print("Error = ${e.message}");
+        // Show the specific error message
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Error Saving User Data"),
+          SnackBar(
+            content: Text("Error Saving User Data: ${e.message}"),
           ),
         );
       }
