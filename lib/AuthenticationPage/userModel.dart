@@ -23,10 +23,10 @@ class Student {
       student_education = "",
       student_phoneNumber = ""}) {
     this.uid = uid;
-    _student_name = student_name;
-    _student_education = student_education;
-    _student_email = student_email;
-    _student_phoneNumber = student_phoneNumber;
+    this._student_name = student_name;
+    this._student_education = student_education;
+    this._student_email = student_email;
+    this._student_phoneNumber = student_phoneNumber;
   }
 
   final studentRef = FirebaseFirestore.instance.collection("Students");
@@ -43,7 +43,7 @@ class Student {
   }
 
   String getStudentName() {
-    return _student_name;
+    return this._student_name;
   }
 
   String getStudentEmail() {
@@ -53,7 +53,8 @@ class Student {
   String getStudentEducation() {
     return _student_education;
   }
-  String getStudentPhNumber(){
+
+  String getStudentPhNumber() {
     return _student_phoneNumber;
   }
 

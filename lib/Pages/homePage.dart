@@ -19,8 +19,10 @@ class _homePageState extends State<homePage> {
   final String studentName = studentModel.getStudentName();
   @override
   Widget build(BuildContext context) {
+    final studentModel = Student();
+    String studentName = studentModel.getStudentName();
     return Scaffold(
-      body: Container(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,7 +36,7 @@ class _homePageState extends State<homePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Hi, User Name",
+                      Text("Hi, $studentName",
                           style: WidgetStyle()
                               .mainHeading
                               .copyWith(color: Colors.black)),

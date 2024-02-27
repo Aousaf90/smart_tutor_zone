@@ -233,20 +233,15 @@ class _LoginPageState extends State<LoginPage> {
             .where('email', isEqualTo: studentEmail)
             .get()
             .then((value) {
-          for (var element in value.docs) {
-            setState(() {
-              studentModel.setStudentData(
-                uid: auth.currentUser!.uid,
-                student_name: element['name'],
-                student_education: element['email'],
-                student_email: studentEmail,
-                student_phoneNumber: element['phoneNumber'],
-              );
-              print("Name: ${element['name']}");
-              print("Email: ${element['email']}");
-              print("Phone Number: ${element['phoneNumber']}");
-            });
-          }
+          value.docs.forEach((element) {
+            studentModel.setStudentData(
+              uid: userCredential.user!.uid,
+              student_name: element['name'],
+              student_education: element["Education"],
+              student_email: element["email"],
+              student_phoneNumber: element["phoneNumber"],
+            );
+          });
           Navigator.of(context).pop();
           WidgetStyle().NextScreen(
             context,
@@ -262,7 +257,7 @@ class _LoginPageState extends State<LoginPage> {
             Navigator.of(context).pop();
           },
         );
-            } on FirebaseAuthException catch (e) {
+      } on FirebaseAuthException catch (e) {
         // Show error in Snackbar and stop loading
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

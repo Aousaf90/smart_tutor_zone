@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -100,7 +99,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               },
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 10),
                           // Name Form Field
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -128,7 +127,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               },
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 10),
                           // Education Form Field
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -156,7 +155,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               },
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 10),
                           // Password Form Field
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -189,11 +188,11 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   Container(
                     child: const Text("Terms and Conditions"),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   Container(
                     child: ElevatedButton(
                         style: ButtonStyle(
@@ -201,7 +200,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               const EdgeInsets.symmetric(
                                   horizontal: 130, vertical: 20)),
                           backgroundColor: MaterialStateColor.resolveWith(
-                              (states) => const Color.fromARGB(255, 41, 65, 202)),
+                              (states) =>
+                                  const Color.fromARGB(255, 41, 65, 202)),
                         ),
                         onPressed: signUp,
                         child: const Text(
@@ -213,7 +213,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                         )),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   Container(
                     padding: const EdgeInsets.fromLTRB(50, 0, 0, 0),
                     child: Text.rich(
@@ -288,7 +288,7 @@ class _RegisterPageState extends State<RegisterPage> {
               },
             );
             WidgetStyle().NextScreen(context, const homePage());
-                    },
+          },
         );
       } on FirebaseAuthException catch (e) {
         // Dismiss the dialog
