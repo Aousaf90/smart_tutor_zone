@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:smart_tutor_zone/helperFunction.dart';
 
 class Student {
-  String uid = "";
-  String _student_name = "";
-  String _student_email = "";
-  String _student_education = "";
-  String _student_phoneNumber = "";
+  String? uid = "";
+  String? _student_name = "";
+  String? _student_email = "";
+  String? _student_education = "";
+  String? _student_phoneNumber = "";
   List _courses_Enrolled = [];
 
   User() {
@@ -14,19 +15,6 @@ class Student {
     _student_education = "";
     _student_phoneNumber = "";
     _courses_Enrolled = [];
-  }
-
-  setStudentData(
-      {uid = "",
-      student_name = "",
-      student_email = "",
-      student_education = "",
-      student_phoneNumber = ""}) {
-    this.uid = uid;
-    this._student_name = student_name;
-    this._student_education = student_education;
-    this._student_email = student_email;
-    this._student_phoneNumber = student_phoneNumber;
   }
 
   final studentRef = FirebaseFirestore.instance.collection("Students");
@@ -42,19 +30,20 @@ class Student {
     );
   }
 
-  String getStudentName() {
-    return this._student_name;
+  Future<String?> getStudentName() async {
+    print(helperFunction.getStudentName());
+    return await helperFunction.getStudentName();
   }
 
-  String getStudentEmail() {
+  String? getStudentEmail() {
     return _student_email;
   }
 
-  String getStudentEducation() {
+  String? getStudentEducation() {
     return _student_education;
   }
 
-  String getStudentPhNumber() {
+  String? getStudentPhNumber() {
     return _student_phoneNumber;
   }
 

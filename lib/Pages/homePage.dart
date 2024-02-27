@@ -16,11 +16,10 @@ class homePage extends StatefulWidget {
 final studentModel = Student();
 
 class _homePageState extends State<homePage> {
-  final String studentName = studentModel.getStudentName();
   @override
   Widget build(BuildContext context) {
     final studentModel = Student();
-    String studentName = studentModel.getStudentName();
+    print("Student Name in home Page = ${studentModel.getStudentName()}");
     return Scaffold(
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 20),
@@ -36,10 +35,7 @@ class _homePageState extends State<homePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Hi, $studentName",
-                          style: WidgetStyle()
-                              .mainHeading
-                              .copyWith(color: Colors.black)),
+                      StudentNameSection(),
                       const Text(
                         "What Would you like to learn Today? ",
                         style: TextStyle(
@@ -237,5 +233,40 @@ class _homePageState extends State<homePage> {
     auth.signOut();
     helperFunction.deleteStudentData();
     WidgetStyle().NextScreen(context, const LoginPage());
+  }
+}
+
+class StudentNameSection extends StatefulWidget {
+  const StudentNameSection({super.key});
+
+  @override
+  State<StudentNameSection> createState() => _StudentNameSectionState();
+}
+
+class _StudentNameSectionState extends State<StudentNameSection> {
+  final studentModel = Student();
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: studentModel.getStudentName(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text(
+            "Hi There",
+            style: WidgetStyle().mainHeading,
+          );
+        } else {
+          return Text(
+            "Hi ${snapshot.data}",
+            style: WidgetStyle()
+                .mainHeading
+                .copyWith(color: Colors.black, fontWeight: FontWeight.bold),
+          );
+        }
+      },
+    );
   }
 }

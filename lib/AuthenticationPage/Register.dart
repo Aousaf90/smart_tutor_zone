@@ -277,13 +277,9 @@ class _RegisterPageState extends State<RegisterPage> {
                 final studentModel = Student();
                 helperFunction.saveStudentEmail(studentEmail);
                 helperFunction.saveUserLogInStatus(true);
-                studentModel.setStudentData(
-                  uid: uid,
-                  student_name: studentName,
-                  student_email: studentEmail,
-                  student_education: studentEducation,
-                  student_phoneNumber: "03061310090",
-                );
+                helperFunction.saveStudentName(studentName);
+                helperFunction.saveStudentEducation(studentEducation);
+                helperFunction.savePhoneNumber("03061310090");
                 studentModel.createStudentEntity();
               },
             );

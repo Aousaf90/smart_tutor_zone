@@ -232,22 +232,28 @@ class _LoginPageState extends State<LoginPage> {
             .collection("Students")
             .where('email', isEqualTo: studentEmail)
             .get()
-            .then((value) {
-          value.docs.forEach((element) {
-            studentModel.setStudentData(
-              uid: userCredential.user!.uid,
-              student_name: element['name'],
-              student_education: element["Education"],
-              student_email: element["email"],
-              student_phoneNumber: element["phoneNumber"],
+            .then(
+          (value) {
+            value.docs.forEach(
+              (element) {
+                setState(
+                  () {
+                    helperFunction.saveStudentName(element['name']);
+                    helperFunction.saveStudentEducation(element['Education']);
+                    helperFunction.savePhoneNumber(element['phoneNumber']);
+                  },
+                );
+                print(
+                    "Student Name In Login Page= ${studentModel.getStudentName()}");
+              },
             );
-          });
-          Navigator.of(context).pop();
-          WidgetStyle().NextScreen(
-            context,
-            const homePage(),
-          );
-        }).catchError(
+            Navigator.of(context).pop();
+            WidgetStyle().NextScreen(
+              context,
+              const homePage(),
+            );
+          },
+        ).catchError(
           (error) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
