@@ -18,33 +18,36 @@ class Student {
   }
 
   final studentRef = FirebaseFirestore.instance.collection("Students");
-  Future<void> createStudentEntity() async {
+  Future<void> createStudentEntity(
+      {String student_email = "",
+      String student_name = "",
+      String student_PhoneNumber = "",
+      String student_Education = ""}) async {
     studentRef.doc(uid).set(
       {
-        "email": _student_email,
-        "name": _student_name,
-        "phoneNumber": _student_phoneNumber,
-        "Education": _student_education,
+        "email": student_email,
+        "name": student_name,
+        "phoneNumber": student_PhoneNumber,
+        "Education": student_Education,
         "Courses": _courses_Enrolled
       },
     );
   }
 
   Future<String?> getStudentName() async {
-    print(helperFunction.getStudentName());
     return await helperFunction.getStudentName();
   }
 
-  String? getStudentEmail() {
-    return _student_email;
+  Future<String?> getStudentEmail() async {
+    return await helperFunction.getStudentEmail();
   }
 
-  String? getStudentEducation() {
-    return _student_education;
+  Future<String?> getStudentEducation() async {
+    return await helperFunction.getStudentEducation();
   }
 
-  String? getStudentPhNumber() {
-    return _student_phoneNumber;
+  Future<String?> getStudentPhNumber() async {
+    return await helperFunction.getPhoneNumber();
   }
 
   // Future<String> _GetStudentName() async {

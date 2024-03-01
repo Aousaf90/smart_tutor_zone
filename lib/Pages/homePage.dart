@@ -5,10 +5,10 @@ import 'package:smart_tutor_zone/AuthenticationPage/userModel.dart';
 import 'package:smart_tutor_zone/Pages/allCategory.dart';
 import 'package:smart_tutor_zone/helperFunction.dart';
 import 'package:smart_tutor_zone/style.dart';
+import '../Courses/courseHelper.dart';
 
 class homePage extends StatefulWidget {
   const homePage({super.key});
-
   @override
   State<homePage> createState() => _homePageState();
 }
@@ -19,6 +19,7 @@ class _homePageState extends State<homePage> {
   @override
   Widget build(BuildContext context) {
     final studentModel = Student();
+    getAllCategories();
     print("Student Name in home Page = ${studentModel.getStudentName()}");
     return Scaffold(
       body: SingleChildScrollView(

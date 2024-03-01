@@ -7,6 +7,7 @@ import 'package:smart_tutor_zone/Pages/homePage.dart';
 import 'package:smart_tutor_zone/helperFunction.dart';
 import './userModel.dart';
 import '../style.dart';
+import 'package:lottie/lottie.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -35,13 +36,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 60),
-                    child: Expanded(
-                      flex: 8,
-                      child: SvgPicture.asset("images/signup.svg",
-                          fit: BoxFit.contain),
-                    ),
+                  LottieBuilder.network(
+                    "https://assets3.lottiefiles.com/packages/lf20_MbephoYReu.json",
+                    height: 300,
+                    width: 300,
                   ),
                   Container(
                     child: const Column(
@@ -280,7 +278,11 @@ class _RegisterPageState extends State<RegisterPage> {
                 helperFunction.saveStudentName(studentName);
                 helperFunction.saveStudentEducation(studentEducation);
                 helperFunction.savePhoneNumber("03061310090");
-                studentModel.createStudentEntity();
+                studentModel.createStudentEntity(
+                    student_email: studentEmail,
+                    student_PhoneNumber: "03061310090",
+                    student_name: studentName,
+                    student_Education: studentEducation);
               },
             );
             WidgetStyle().NextScreen(context, const homePage());

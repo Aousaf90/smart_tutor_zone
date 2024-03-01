@@ -8,6 +8,8 @@ import 'package:smart_tutor_zone/AuthenticationPage/userModel.dart';
 import 'package:smart_tutor_zone/Pages/homePage.dart';
 import 'package:smart_tutor_zone/helperFunction.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
+
 import '../style.dart';
 
 class LoginPage extends StatefulWidget {
@@ -34,16 +36,8 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 60),
-                    height: 300,
-                    width: 400,
-                    child: Expanded(
-                      flex: 8,
-                      child: SvgPicture.asset("images/login.svg",
-                          fit: BoxFit.contain),
-                    ),
-                  ),
+                  LottieBuilder.network(
+                      "https://assets1.lottiefiles.com/packages/lf20_wWZd8QJ7Cj.json"),
                   Container(
                     child: const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
