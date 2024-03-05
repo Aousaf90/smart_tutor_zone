@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/LoginPage.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/userModel.dart';
+import 'package:smart_tutor_zone/Courses/coursesModel.dart';
 import 'package:smart_tutor_zone/Pages/allCategory.dart';
 import 'package:smart_tutor_zone/helperFunction.dart';
 import 'package:smart_tutor_zone/style.dart';
@@ -19,6 +20,7 @@ class _homePageState extends State<homePage> {
   @override
   Widget build(BuildContext context) {
     final studentModel = Student();
+    setAllCourses();
     getAllCategories();
     print("Student Name in home Page = ${studentModel.getStudentName()}");
     return Scaffold(
@@ -132,7 +134,14 @@ class _homePageState extends State<homePage> {
                       )
                     ],
                   ),
-                  Container(child: const Text("Stream of Different Categoris"))
+                  Container(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: showAllCategories(),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -174,7 +183,13 @@ class _homePageState extends State<homePage> {
                     ],
                   ),
                   Container(
-                      child: const Text("Stream of Different Popular Courses"))
+                    child: SingleChildScrollView(
+                      child: Courses().getCourseViewBox(),
+                    ),
+                  ),
+                  // Container(
+                  //   child: const Text("Stream of Different Popular Courses"),
+                  // ),
                 ],
               ),
             ),
@@ -270,4 +285,25 @@ class _StudentNameSectionState extends State<StudentNameSection> {
       },
     );
   }
+}
+
+List<Widget> showAllCategories() {
+  List<dynamic> all_categories = getCategories();
+  List<Widget> list_of_categories = [];
+
+  for (var category in all_categories) {
+    TextButton category_text = TextButton(
+      onPressed: () {},
+      child: Text(
+        category,
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 18,
+          overflow: TextOverflow.fade,
+        ),
+      ),
+    );
+    list_of_categories.add(category_text);
+  }
+  return list_of_categories;
 }

@@ -1,6 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import './coursesModel.dart';
 
 List mainCategory = [];
+
+List<Widget> allCourseBox = [];
 getMainCategories() {
   CollectionReference collectionRef =
       FirebaseFirestore.instance.collection("Courses_Categories");
@@ -71,5 +75,16 @@ getAllCategories() async {
     }
     course_detail[categorie] = sub_courses_list;
   }
-  print(course_detail['Technology'][0]);
+  mainCategory = course_detail.keys.toList();
+}
+
+List<dynamic> getCategories() {
+  return mainCategory;
+}
+
+void setAllCourses() {
+  Courses course_model = Courses();
+  for (var category in mainCategory) {
+    print("Category  = $category");
+  }
 }
