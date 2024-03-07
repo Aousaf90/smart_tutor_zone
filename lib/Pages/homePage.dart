@@ -139,7 +139,7 @@ class _homePageState extends State<homePage> {
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
-                        children: showAllCategories(),
+                        children: [],
                       ),
                     ),
                   ),
@@ -286,25 +286,4 @@ class _StudentNameSectionState extends State<StudentNameSection> {
       },
     );
   }
-}
-
-List<Widget> showAllCategories() {
-  List<dynamic> all_categories = getCategories();
-  List<Widget> list_of_categories = [];
-
-  for (var category in all_categories) {
-    TextButton category_text = TextButton(
-      onPressed: () {},
-      child: Text(
-        category,
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 18,
-          overflow: TextOverflow.fade,
-        ),
-      ),
-    );
-    list_of_categories.add(category_text);
-  }
-  return list_of_categories;
 }

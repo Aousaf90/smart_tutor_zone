@@ -80,10 +80,6 @@ getAllCategories() async {
   mainCategory = course_detail.keys.toList();
 }
 
-List<dynamic> getCategories() {
-  return mainCategory;
-}
-
 Future<List> setAllCourses() async {
   courseList = [];
   mainCategory = courseDetail.keys.toList();
@@ -102,7 +98,7 @@ Future<List> setAllCourses() async {
   return courseList;
 }
 
-void showAllCourses() async {
+void getCourseData() async {
   List AllCourses = await setAllCourses();
   print("TOTAL COURSES = ${AllCourses}");
 }
