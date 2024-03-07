@@ -8,6 +8,15 @@ class Courses {
   String price = "";
   String rating = "";
   String tutor = "";
+  setCourseData(String name, String category, String subCategory, String price,
+      String rating, String tutor) {
+    this.name = name;
+    this.category = category;
+    this.subCategory = subCategory;
+    this.price = price;
+    this.rating = rating;
+    this.tutor = tutor;
+  }
 
   Widget getCourseViewBox() {
     Container courseContainer = Container(
@@ -66,3 +75,4 @@ class Courses {
     return courseContainer;
   }
 }
+

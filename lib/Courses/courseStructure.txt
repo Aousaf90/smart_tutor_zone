@@ -1,0 +1,40 @@
+{
+    Business:[
+        {
+            Entrepreneurship: [
+                Business Model Canvas, 
+                Lean Startup Methodology, 
+                Pitching Your Ideas, 
+                Scaling Your Business, 
+                Startup Fundamentals
+            ]
+        }, 
+        {
+            Finance: [
+                Corporate Finance Basics, 
+                Financial Modeling with Excel, 
+                Introduction to Financial Markets, 
+                Investment Strategies, 
+                Personal Finance Management
+            ]
+        }, 
+        {
+            Leadership: [
+                Conflict Resolution,
+                Decision Making and Problem Solving,
+                Leadership Essentials, 
+                Strategic Leadership, 
+                Team Management Skills
+            ]
+        }, 
+        {
+            Marketing: [
+                Content Marketing Essentials, 
+                Digital Marketing Fundamentals, 
+                Email Marketing Mastery, 
+                SEO Techniques, 
+                Social Media Marketing Strategies
+            ]
+        }
+    ]
+}

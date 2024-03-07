@@ -21,7 +21,8 @@ class _homePageState extends State<homePage> {
   Widget build(BuildContext context) {
     final studentModel = Student();
     setAllCourses();
-    getAllCategories();
+    // getAllCategories();
+    getCourseData();
     print("Student Name in home Page = ${studentModel.getStudentName()}");
     return Scaffold(
       body: SingleChildScrollView(
