@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import './coursesModel.dart';
 
@@ -77,11 +78,11 @@ getAllCategories() async {
     course_detail[categorie] = sub_courses_list;
   }
   courseDetail = course_detail;
-  mainCategory = course_detail.keys.toList();
 }
 
 Future<List> setAllCourses() async {
   courseList = [];
+  getAllCategories();
   mainCategory = courseDetail.keys.toList();
   for (var category in mainCategory) {
     // print("Main Category  = $category");
@@ -98,23 +99,8 @@ Future<List> setAllCourses() async {
   return courseList;
 }
 
-void getCourseData() async {
+Future<List> getCourseData() async {
   List AllCourses = await setAllCourses();
-  print("TOTAL COURSES = ${AllCourses}");
+  print("TOTAL COURSES = ${AllCourses.length}");
+  return AllCourses;
 }
-// Future<Map<String, dynamic>> getCourseData(
-//     mainCourseName, subCourseName, courseName) async {
-//   Map<String, dynamic> courseData = {};
-//   DocumentReference documentReference = FirebaseFirestore.instance
-//       .collection("Courses_Categories")
-//       .doc(mainCourseName)
-//       .collection(subCourseName)
-//       .doc(courseName);
-//   await documentReference.get().then(
-//     (DocumentSnapshot doc) {
-//       final data = doc.data() as Map<String, dynamic>;
-//       courseData = data;
-//     },
-//   );
-//   return courseData;
-// }
