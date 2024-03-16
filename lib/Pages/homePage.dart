@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/LoginPage.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/userModel.dart';
 import 'package:smart_tutor_zone/Courses/coursesModel.dart';
 import 'package:smart_tutor_zone/Pages/allCategory.dart';
-import 'package:smart_tutor_zone/Pages/courseChange_Provider.dart';
 import 'package:smart_tutor_zone/helperFunction.dart';
 import 'package:smart_tutor_zone/style.dart';
 import '../Courses/courseHelper.dart';
@@ -18,6 +18,7 @@ class homePage extends StatefulWidget {
 
 final studentModel = Student();
 List mainCategory_List = [];
+List<Course> course_list = [];
 List subCateogry_List = [];
 List course_List = [];
 List<dynamic> courseData = [];
@@ -104,6 +105,10 @@ class _homePageState extends State<homePage> {
             //Third Container (Discound Page)
             Container(
               decoration: BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.fill,
+                  image: AssetImage("images/discournt_pic.png"),
+                ),
                 color: Colors.blueAccent,
                 borderRadius: BorderRadius.circular(
                   20,
@@ -141,12 +146,13 @@ class _CourseFilterContainerState extends State<CourseFilterContainer> {
   @override
   Widget build(BuildContext context) {
     List<Widget> main_category_widget = [];
+    List<Course> CourseList = [];
     for (var category in mainCategory_List) {
       main_category_widget.add(
         TextButton(
           onPressed: () async {
             List<dynamic> subCategories =
-                await getSubCategories(selectedCategory);
+                await getSubCategory(selectedCategory);
             setState(
               () {
                 selectedCategory = category;
@@ -170,28 +176,36 @@ class _CourseFilterContainerState extends State<CourseFilterContainer> {
         ),
       );
     }
-    List<Widget> sub_category_list_widget = [];
-    for (var subCategory in subCateogry_List) {
-      sub_category_list_widget.add(
-        TextButton(
-          onPressed: () {
-            selected_subcategory = subCategory;
-          },
-          style: ButtonStyle(
-            foregroundColor: MaterialStateProperty.all(
-              selected_subcategory == subCategory
-                  ? Color(0xff0051f5)
-                  : Color(0xffa0a4ab),
+    Future<List<Widget>> getsubCategoryListWidget(subCateogry_List) async {
+      List<Widget> sub_category_list_widget = [];
+      for (var subCategory in subCateogry_List) {
+        sub_category_list_widget.add(
+          TextButton(
+            onPressed: () {
+              setState(() {
+                selected_subcategory = subCategory;
+                getCourListWidget();
+              });
+            },
+            style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.all(
+                selected_subcategory == subCategory
+                    ? Color(0xff0051f5)
+                    : Color(0xffa0a4ab),
+              ),
+            ),
+            child: Text(
+              subCategory,
+              style: TextStyle(
+                fontSize: 18,
+              ),
             ),
           ),
-          child: Text(
-            subCategory,
-            style: TextStyle(fontSize: 18),
-          ),
-        ),
-      );
+        );
+      }
+      return sub_category_list_widget;
     }
-    print("Main Category = ${selectedCategory}");
+
     return Container(
       child: Column(
         children: [
@@ -285,23 +299,48 @@ class _CourseFilterContainerState extends State<CourseFilterContainer> {
                 Container(
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: sub_category_list_widget,
+                    child: FutureBuilder(
+                      future: getsubCategoryListWidget(subCateogry_List),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text("There is an Error");
+                        } else if (snapshot.connectionState ==
+                            ConnectionState.done) {
+                          return Row(
+                            children: snapshot.data!,
+                          );
+                        } else {
+                          return Container(
+                            height: 30,
+                            width: 30,
+                            color: Colors.blue,
+                          );
+                        }
+                      },
                     ),
                   ),
                 ),
                 Container(
-                  child: SingleChildScrollView(
-                    child: Courses().getCourseViewBox(),
+                  height: 230,
+                  child: FutureBuilder<List<Widget>>(
+                    future: getCourListWidget(),
+                    builder: (context, snapshot) {
+                      return SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: snapshot.data!,
+                        ),
+                      );
+                    },
                   ),
                 ),
-                // Container(
-                //   child: const Text("Stream of Different Popular Courses"),
-                // ),
               ],
             ),
           ),
-          //Fifth Container (Top Mentors)
           const SizedBox(height: 30),
           Container(
             child: Column(
@@ -386,7 +425,7 @@ class _StudentNameSectionState extends State<StudentNameSection> {
 
 Future<List> getSubCategory(String selectedCategory) async {
   List<String> subCategoryList = [];
-  List<dynamic> courseData = await getCourseData(); // Await the result
+  List<dynamic> courseData = await getCourseData();
   for (var course in courseData) {
     if (course.contains(selectedCategory) &&
         !subCategoryList.contains(
@@ -395,5 +434,41 @@ Future<List> getSubCategory(String selectedCategory) async {
       subCategoryList.add(course[1]);
     }
   }
+  await Future.delayed(Durations.medium4);
   return subCategoryList;
+}
+
+Future<List> getCourseList() async {
+  List<String> course_list = [];
+  List<dynamic> courseData = await getCourseData();
+  for (var course in courseData) {
+    if (course.contains(selectedCategory) &&
+        course.contains(selected_subcategory)) {
+      course_list.add(course[2]);
+    }
+  }
+  return course_list;
+}
+
+Future<List<Widget>> getCourListWidget() async {
+  List<Widget> courseListWidget = [];
+  for (var course in await getCourseList()) {
+    Course Cr = Course(
+        name: course,
+        category: selectedCategory,
+        subCategory: selected_subcategory,
+        price: "799/-",
+        total_number_of_student: [],
+        tutor: "Sir Kamran",
+        rating: 0);
+    course_list.add(Cr);
+    courseListWidget.add(Cr.viewBox());
+    courseListWidget.add(
+      SizedBox(
+        width: 30,
+      ),
+    );
+  }
+
+  return courseListWidget;
 }

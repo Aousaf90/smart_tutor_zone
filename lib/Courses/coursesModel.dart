@@ -1,30 +1,37 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
-class Courses {
-  String name = "";
+class Course {
+  String name;
+  String price;
+  int rating;
+  String tutor;
+  List total_number_of_student = [];
   String category = "";
   String subCategory = "";
-  String price = "";
-  String rating = "";
-  String tutor = "";
-  setCourseData(String name, String category, String subCategory, String price,
-      String rating, String tutor) {
-    this.name = name;
-    this.category = category;
-    this.subCategory = subCategory;
-    this.price = price;
-    this.rating = rating;
-    this.tutor = tutor;
-  }
+  Course(
+      {this.name = 'Computer Science',
+      this.category = "Technology",
+      this.price = "799/-",
+      this.rating = 0,
+      this.subCategory = "Basic",
+      this.total_number_of_student = const [],
+      this.tutor = "Sir Kamran"});
 
-  Widget getCourseViewBox() {
-    Container courseContainer = Container(
+  Widget viewBox() {
+    return Container(
+      height: 250,
       width: 250,
-      height: 180,
       decoration: BoxDecoration(
-        color: Colors.black,
-        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Color.fromARGB(255, 230, 232, 234).withOpacity(0.5),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: Offset(0, 3),
+          ),
+        ],
       ),
       child: Column(
         children: [
@@ -33,46 +40,56 @@ class Courses {
             decoration: BoxDecoration(
               color: Colors.black,
               borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
             ),
           ),
           Container(
-              height: 90,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(10),
-                  bottomRight: Radius.circular(10),
-                ),
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text("Science"),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.save),
-                      ),
-                    ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ListTile(
+                  trailing: Icon(
+                    Icons.save,
+                    color: Color(0xff088072),
                   ),
-                  const Text("Computer Science"),
-                  const Row(
-                    children: [
-                      const Text("850/-  |"),
-                      const Text("4.2  |"),
-                      const Text("7830 Std"),
-                    ],
-                  )
-                ],
-              ))
+                  title: Text(
+                    name,
+                    style: TextStyle(
+                      color: Color(0xfffa680e),
+                    ),
+                  ),
+                ),
+                Text(
+                  category,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      price,
+                      style: TextStyle(
+                        color: Color(0xff3284f7),
+                      ),
+                    ),
+                    Icon(
+                      Icons.star,
+                      color: Color(0xfffacc42),
+                    ),
+                    Text("$rating"),
+                    Text("|"),
+                    Text("$total_number_of_student Std"),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
-    return courseContainer;
   }
 }
-
