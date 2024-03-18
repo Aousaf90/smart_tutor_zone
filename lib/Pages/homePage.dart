@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
@@ -6,6 +7,7 @@ import 'package:smart_tutor_zone/AuthenticationPage/LoginPage.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/userModel.dart';
 import 'package:smart_tutor_zone/Courses/coursesModel.dart';
 import 'package:smart_tutor_zone/Pages/allCategory.dart';
+import 'package:smart_tutor_zone/Pages/course_overview.dart';
 import 'package:smart_tutor_zone/helperFunction.dart';
 import 'package:smart_tutor_zone/style.dart';
 import '../Courses/courseHelper.dart';
@@ -184,7 +186,7 @@ class _CourseFilterContainerState extends State<CourseFilterContainer> {
             onPressed: () {
               setState(() {
                 selected_subcategory = subCategory;
-                getCourListWidget();
+                getCourListWidget(context);
               });
             },
             style: ButtonStyle(
@@ -326,7 +328,7 @@ class _CourseFilterContainerState extends State<CourseFilterContainer> {
                 Container(
                   height: 230,
                   child: FutureBuilder<List<Widget>>(
-                    future: getCourListWidget(),
+                    future: getCourListWidget(context),
                     builder: (context, snapshot) {
                       return SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
@@ -450,7 +452,7 @@ Future<List> getCourseList() async {
   return course_list;
 }
 
-Future<List<Widget>> getCourListWidget() async {
+Future<List<Widget>> getCourListWidget(BuildContext context) async {
   List<Widget> courseListWidget = [];
   for (var course in await getCourseList()) {
     Course Cr = Course(
@@ -462,7 +464,25 @@ Future<List<Widget>> getCourListWidget() async {
         tutor: "Sir Kamran",
         rating: 0);
     course_list.add(Cr);
-    courseListWidget.add(Cr.viewBox());
+    GestureDetector viewBoxGesture = GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CourseDetailPage(
+                course_name: course,
+                instructure_name: "Sir Kamran",
+                price: "799/-",
+                rating: 0,
+                subCategory: selected_subcategory),
+          ),
+        );
+      },
+      child: Cr.viewBox(
+        context,
+      ),
+    );
+    courseListWidget.add(viewBoxGesture);
     courseListWidget.add(
       SizedBox(
         width: 30,

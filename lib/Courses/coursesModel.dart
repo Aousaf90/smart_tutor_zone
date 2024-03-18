@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:smart_tutor_zone/Pages/course_overview.dart';
 
 class Course {
   String name;
@@ -19,7 +20,7 @@ class Course {
       this.total_number_of_student = const [],
       this.tutor = "Sir Kamran"});
 
-  Widget viewBox() {
+  Widget viewBox(BuildContext context) {
     return Container(
       height: 250,
       width: 250,
