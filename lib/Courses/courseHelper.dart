@@ -104,3 +104,21 @@ Future<List> getCourseData() async {
   print("TOTAL COURSES = ${AllCourses.length}");
   return AllCourses;
 }
+
+getEachCourseData(String category, String subCategory, String course) async {
+  Map<String, dynamic> courseData = {};
+  // print("Main Course =  ${category}");
+  // print("Sub Category = ${subCategory}");
+  // print("Course= ${course}");
+  try {
+    DocumentReference documentReference = FirebaseFirestore.instance
+        .doc("/Courses_Categories/${category}/${subCategory}/${course}");
+    await documentReference.get().then((DocumentSnapshot doc) {
+      courseData = doc.data() as Map<String, dynamic>;
+    });
+    print("Document data = ${courseData}");
+  } catch (e) {
+    print("Error Get = ${e}");
+  }
+  return courseData;
+}

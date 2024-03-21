@@ -13,12 +13,14 @@ class CourseDetailPage extends StatefulWidget {
   int rating;
   String price;
   String subCategory;
+  String videos_link;
   CourseDetailPage(
       {required this.course_name,
       required this.instructure_name,
       required this.price,
       required this.rating,
-      required this.subCategory});
+      required this.subCategory,
+      required this.videos_link});
 
   @override
   State<CourseDetailPage> createState() => _CourseDetailPageState();
@@ -188,32 +190,37 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                     SizedBox(
                       height: 10,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CircleAvatar(),
-                        Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                widget.instructure_name,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w900,
-                                ),
+                    Container(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            CircleAvatar(),
+                            Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    widget.instructure_name,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w900,
+                                    ),
+                                  ),
+                                  Text("Software Developer")
+                                ],
                               ),
-                              Text("Software Developer")
-                            ],
-                          ),
+                            ),
+                            SizedBox(
+                              width: 100,
+                            ),
+                            IconButton(
+                              onPressed: () {},
+                              icon: Icon(Icons.message_rounded),
+                            ),
+                          ],
                         ),
-                        SizedBox(
-                          width: 100,
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(Icons.message_rounded),
-                        ),
-                      ],
+                      ),
                     ),
                   ],
                 ),
@@ -273,7 +280,9 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xff005965),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      print("Youtube Link = ${widget.videos_link}");
+                    },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [

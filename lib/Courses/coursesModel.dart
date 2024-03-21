@@ -11,6 +11,7 @@ class Course {
   List total_number_of_student = [];
   String category = "";
   String subCategory = "";
+  String lecture_link = "";
   Course(
       {this.name = 'Computer Science',
       this.category = "Technology",
@@ -18,7 +19,8 @@ class Course {
       this.rating = 0,
       this.subCategory = "Basic",
       this.total_number_of_student = const [],
-      this.tutor = "Sir Kamran"});
+      this.tutor = "Sir Kamran",
+      this.lecture_link = "https://youtube.com/"});
 
   Widget viewBox(BuildContext context) {
     return Container(
@@ -92,5 +94,9 @@ class Course {
         ],
       ),
     );
+  }
+
+  shwoContent() {
+    // print("Link = ${this.lecture_link}");
   }
 }

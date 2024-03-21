@@ -330,13 +330,17 @@ class _CourseFilterContainerState extends State<CourseFilterContainer> {
                   child: FutureBuilder<List<Widget>>(
                     future: getCourListWidget(context),
                     builder: (context, snapshot) {
-                      return SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: snapshot.data!,
-                        ),
-                      );
+                      if (snapshot.connectionState == ConnectionState.active) {
+                        return CircularProgressIndicator();
+                      } else {
+                        return SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: snapshot.data!,
+                          ),
+                        );
+                      }
                     },
                   ),
                 ),
@@ -455,39 +459,49 @@ Future<List> getCourseList() async {
 Future<List<Widget>> getCourListWidget(BuildContext context) async {
   List<Widget> courseListWidget = [];
   for (var course in await getCourseList()) {
-    Course Cr = Course(
-        name: course,
-        category: selectedCategory,
-        subCategory: selected_subcategory,
-        price: "799/-",
-        total_number_of_student: [],
-        tutor: "Sir Kamran",
-        rating: 0);
-    course_list.add(Cr);
-    GestureDetector viewBoxGesture = GestureDetector(
-      onTap: () {
-        Navigator.push(
+    try {
+      final data = await getEachCourseData(
+          selectedCategory, selected_subcategory, course);
+
+      Course Cr = Course(
+          name: data['name'],
+          category: selectedCategory,
+          subCategory: selected_subcategory,
+          price: data['price'],
+          total_number_of_student: data['students'],
+          tutor: data['tutor'],
+          rating: data['rating'],
+          lecture_link: data['lectures']);
+      course_list.add(Cr);
+      GestureDetector viewBoxGesture = GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CourseDetailPage(
+                course_name: data['name'],
+                instructure_name: data['tutor'],
+                price: data['price'],
+                rating: data['rating'],
+                subCategory: selected_subcategory,
+                videos_link: data['lectures'],
+              ),
+            ),
+          );
+        },
+        child: Cr.viewBox(
           context,
-          MaterialPageRoute(
-            builder: (context) => CourseDetailPage(
-                course_name: course,
-                instructure_name: "Sir Kamran",
-                price: "799/-",
-                rating: 0,
-                subCategory: selected_subcategory),
-          ),
-        );
-      },
-      child: Cr.viewBox(
-        context,
-      ),
-    );
-    courseListWidget.add(viewBoxGesture);
-    courseListWidget.add(
-      SizedBox(
-        width: 30,
-      ),
-    );
+        ),
+      );
+      courseListWidget.add(viewBoxGesture);
+      courseListWidget.add(
+        SizedBox(
+          width: 30,
+        ),
+      );
+    } catch (e) {
+      print("Error = ${e}");
+    }
   }
 
   return courseListWidget;
