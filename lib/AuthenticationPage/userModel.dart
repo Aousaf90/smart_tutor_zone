@@ -46,8 +46,8 @@ class Student {
     return await helperFunction.getPhoneNumber();
   }
 
-  enrollStudent(course_id) {
-    print("Student to be Enrolled = ${_student_name}");
-    return _student_email;
-  }
+  // enrollStudent(course_id) {
+  //   print("Student to be Enrolled = ${_student_name}");
+  //   return _student_email;
+  // }
 }

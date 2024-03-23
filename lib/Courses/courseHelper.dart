@@ -119,4 +119,6 @@ getEachCourseData(String category, String subCategory, String course) async {
   return courseData;
 }
 
-enrollStudentWithCourse(String student_email) {}
+enrollStudentWithCourse(String student_email) {
+  print("Student to be Enrolled = ${student_email}");
+}

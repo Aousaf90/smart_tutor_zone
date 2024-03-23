@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/Register.dart';
-import 'package:smart_tutor_zone/AuthenticationPage/recoverPassword.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/userModel.dart';
 import 'package:smart_tutor_zone/Pages/homePage.dart';
 import 'package:smart_tutor_zone/helperFunction.dart';
@@ -27,6 +26,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromRGBO(245, 249, 255, 1),
       body: SingleChildScrollView(
         child: Scrollable(
           viewportBuilder: (context, position) {
@@ -149,10 +149,7 @@ class _LoginPageState extends State<LoginPage> {
                             const Text("Remember Me")
                           ],
                         ),
-                        TextButton(
-                          onPressed: recoverPassword,
-                          child: const Text("Forget Password ?"),
-                        ),
+                        forgetPasswordButton(),
                       ],
                     ),
                   ),
@@ -268,11 +265,73 @@ class _LoginPageState extends State<LoginPage> {
       }
     }
   }
+}
+
+class forgetPasswordButton extends StatefulWidget {
+  @override
+  State<forgetPasswordButton> createState() => _forgetPasswordButtonState();
+}
+
+class _forgetPasswordButtonState extends State<forgetPasswordButton> {
+  TextEditingController textEditingController = TextEditingController();
+  String email = "";
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        showBottomSheet(
+          context: context,
+          builder: (context) {
+            return Container(
+              padding: EdgeInsets.all(30),
+              height: 200,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                ),
+              ),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    TextFormField(
+                      controller: textEditingController,
+                      decoration:
+                          InputDecoration(hintText: "Enter your Email,"),
+                      onChanged: (value) {
+                        setState(() {
+                          email = value.toString();
+                        });
+                      },
+                    ),
+                    TextButton(
+                      onPressed: recoverPassword,
+                      child: Text("Recover Password"),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+      child: const Text("Forget Password ?"),
+    );
+  }
 
   recoverPassword() {
-    WidgetStyle().NextScreen(
-      context,
-      const RecoverPassowrdPage(),
-    );
+    final auth = FirebaseAuth.instance;
+    auth.sendPasswordResetEmail(email: email).then((value) {
+      showBottomSheet(
+        context: context,
+        builder: (context) {
+          return Text("Reset Link has been send to your Email");
+        },
+      );
+    });
   }
 }
