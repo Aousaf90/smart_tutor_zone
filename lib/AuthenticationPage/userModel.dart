@@ -9,20 +9,16 @@ class Student {
   String? _student_phoneNumber = "";
   List _courses_Enrolled = [];
 
-  User() {
-    _student_name = "";
-    _student_email = "";
-    _student_education = "";
-    _student_phoneNumber = "";
-    _courses_Enrolled = [];
-  }
-
   final studentRef = FirebaseFirestore.instance.collection("Students");
   Future<void> createStudentEntity(
       {String student_email = "",
       String student_name = "",
       String student_PhoneNumber = "",
       String student_Education = ""}) async {
+    _student_name = student_name;
+    _student_education = student_Education;
+    _student_email = student_email;
+    _student_phoneNumber = student_PhoneNumber;
     studentRef.doc(uid).set(
       {
         "email": student_email,
@@ -50,8 +46,8 @@ class Student {
     return await helperFunction.getPhoneNumber();
   }
 
-  // Future<String> _GetStudentName() async {
-  //   studentRef.where('uid');
-  //   return " ";
-  // }
+  enrollStudent(course_id) {
+    print("Student to be Enrolled = ${_student_name}");
+    return _student_email;
+  }
 }

@@ -95,8 +95,4 @@ class Course {
       ),
     );
   }
-
-  shwoContent() {
-    // print("Link = ${this.lecture_link}");
-  }
 }
