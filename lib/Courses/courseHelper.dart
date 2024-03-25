@@ -1,93 +1,83 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import './coursesModel.dart';
 
-List mainCategory = [];
-List courseList = [];
-Map<String, dynamic> courseDetail = {};
-List<Widget> allCourseBox = [];
-getMainCategories() {
+Future<Set<String>> getMainCategories() async {
   CollectionReference collectionRef =
       FirebaseFirestore.instance.collection("Courses_Categories");
-
-  collectionRef.get().then(
-    (value) {
-      value.docs.forEach(
-        (element) {
-          mainCategory.add(element.id);
-        },
-      );
-    },
-  );
-  Set<dynamic> allCategories = mainCategory.toSet();
-  return allCategories;
+  QuerySnapshot querySnapshot = await collectionRef.get();
+  return querySnapshot.docs.map((doc) => doc.id).toSet();
 }
 
-Future<dynamic> getSubCategories(document_name) async {
-  try {
-    List sub_categories = [];
-    CollectionReference collectionRef =
-        FirebaseFirestore.instance.collection("Courses_Categories");
-
-    final DocumentSnapshot snapshot =
-        await collectionRef.doc(document_name).get();
-
-    if (snapshot.exists) {
-      Map<String, dynamic> Document_Value =
-          snapshot.data() as Map<String, dynamic>;
-    } else {
-      print("Document does not exist");
-    }
-    return snapshot['subCategories'];
-  } catch (e) {
-    print(
-      "${e.toString()}",
-    );
+Future<List<String>> getSubCategories(String categoryName) async {
+  DocumentSnapshot snapshot = await FirebaseFirestore.instance
+      .collection("Courses_Categories")
+      .doc(categoryName)
+      .get();
+  if (snapshot.exists) {
+    return List.from(snapshot['subCategories']);
+  } else {
+    throw Exception("Document does not exist");
   }
 }
 
-Future<Map<String, dynamic>> getCourse(mainDocName, DocName) async {
-  final Map<String, dynamic> sub_Category_List = {};
-  List<dynamic> course_list = [];
-  final CollectionReference collectionReference = FirebaseFirestore.instance
-      .collection("/Courses_Categories/$mainDocName/$DocName");
-  await collectionReference.get().then(
-    (value) {
-      value.docs.forEach(
-        (element) {
-          course_list.add(element.id);
-        },
-      );
+Future<Map<String, dynamic>> getCourses(
+    String mainCategory, String subCategory) async {
+  Map<String, dynamic> courseDetail = {};
+  List course_list = [];
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      .collection("/Courses_Categories/$mainCategory/$subCategory")
+      .get();
+  querySnapshot.docs.forEach(
+    (element) {
+      course_list.add(element.id);
     },
   );
-  sub_Category_List[DocName] = course_list;
-  return sub_Category_List;
+  courseDetail[subCategory] = course_list;
+  return courseDetail;
 }
 
+// Future<Map<String, List<String>>> getAllCategories() async {
+//   Set<String> mainCategories = await getMainCategories();
+//   Map<String, List<String>> courseDetail = {};
+//   await Future.forEach(mainCategories, (mainCategory) async {
+//     List<String> subCategories = await getSubCategories(mainCategory);
+//     List<String> courses = [];
+//     await Future.forEach(subCategories, (subCategory) async {
+//       List<String> subCategoryCourses =
+//           await getCourses(mainCategory, subCategory);
+//       courses.addAll(subCategoryCourses);
+//     });
+//     courseDetail[mainCategory] = courses;
+//   });
+//   return courseDetail;
+// }
 getAllCategories() async {
+  List sub_courses_list = [];
+  final course_details = {};
+  Map<String, List> subCategoryDetail = {};
   Map<String, dynamic> course_detail = {};
-  List main_categories = await getMainCategories().toList();
-  for (var categorie in main_categories) {
-    List sub_courses_list = [];
-    List subCategories = await getSubCategories(categorie);
-    for (var subCategor in subCategories) {
-      Map<String, dynamic> courses = await getCourse(categorie, subCategor);
-      sub_courses_list.add(courses);
-    }
-    course_detail[categorie] = sub_courses_list;
-  }
-  courseDetail = course_detail;
+  Set<String> main_categories = await getMainCategories();
+  await Future.forEach(
+    main_categories,
+    (categorie) async {
+      List sub_course_list = [];
+      List subCategories = await getSubCategories(categorie);
+      // print("SUb Category list for Category $categorie = ${subCategories}");
+      for (var subCategory in subCategories) {
+        Map<String, dynamic> courses = await getCourses(categorie, subCategory);
+        sub_course_list.add(courses);
+      }
+      course_detail[categorie] = sub_course_list;
+    },
+  );
+  return course_detail;
 }
 
-Future<List> setAllCourses() async {
-  courseList = [];
-  getAllCategories();
-  mainCategory = courseDetail.keys.toList();
-  for (var category in mainCategory) {
-    // print("Main Category  = $category");
+Future<List> getAllCourses() async {
+  final courseList = [];
+  final courseDetail = await getAllCategories();
+  var main_category = courseDetail.keys.toList();
+  for (var category in main_category) {
     var data = courseDetail[category];
-    // print("Data = ${data}");
     for (var subCategory in data) {
       var subCategoryName = subCategory.keys.first;
       List subCoursesList = subCategory[subCategoryName];
@@ -99,26 +89,17 @@ Future<List> setAllCourses() async {
   return courseList;
 }
 
-Future<List> getCourseData() async {
-  List AllCourses = await setAllCourses();
-  print("TOTAL COURSES = ${AllCourses.length}");
-  return AllCourses;
+Future<Map<String, dynamic>> getCourseData(
+    String category, String subCategory, String course) async {
+  DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+      .doc("/Courses_Categories/$category/$subCategory/$course")
+      .get();
+  return documentSnapshot.data() as Map<String, dynamic>;
 }
 
-getEachCourseData(String category, String subCategory, String course) async {
-  Map<String, dynamic> courseData = {};
-  try {
-    DocumentReference documentReference = FirebaseFirestore.instance
-        .doc("/Courses_Categories/${category}/${subCategory}/${course}");
-    await documentReference.get().then((DocumentSnapshot doc) {
-      courseData = doc.data() as Map<String, dynamic>;
-    });
-  } catch (e) {
-    print("Error Get = ${e}");
-  }
-  return courseData;
+Future<void> enrollStudentWithCourse(String studentEmail) async {
+  print("Student to be Enrolled = $studentEmail");
 }
 
-enrollStudentWithCourse(String student_email) {
-  print("Student to be Enrolled = ${student_email}");
-}
+// Example usage:
+

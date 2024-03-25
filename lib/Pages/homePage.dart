@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/LoginPage.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/userModel.dart';
 import 'package:smart_tutor_zone/Courses/coursesModel.dart';
@@ -28,7 +27,7 @@ String selectedCategory = mainCategory_List[0];
 String selected_subcategory = "";
 List<dynamic> currentCourses = [];
 getAllData() async {
-  courseData = await getCourseData();
+  courseData = await getAllCourses();
   for (var course in courseData) {
     String MCategory = course[0];
     String SubCategory = course[1];
@@ -42,91 +41,110 @@ class _homePageState extends State<homePage> {
   @override
   Widget build(BuildContext context) {
     final studentModel = Student();
-    setAllCourses();
+    getAllCategories();
     getAllData();
-    // getAllCategories();
+
     print("Student Name in home Page = ${studentModel.getStudentName()}");
     return Scaffold(
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            //First Container (Greetings)
-            Container(
-                child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+      body: FutureBuilder(
+        future: getAllData(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Container(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          } else if (snapshot.connectionState == ConnectionState) {
+            return Container(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          } else {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  //First Container (Greetings)
+                  Container(
+                      child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      StudentNameSection(),
-                      const Text(
-                        "What Would you like to learn Today? ",
-                        style: TextStyle(
-                          fontSize: 12,
+                      Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            StudentNameSection(),
+                            const Text(
+                              "What Would you like to learn Today? ",
+                              style: TextStyle(
+                                fontSize: 12,
+                              ),
+                            ),
+                            const Text(
+                              "Search Below",
+                              style: TextStyle(
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      const Text(
-                        "Search Below",
-                        style: TextStyle(
-                          fontSize: 12,
-                        ),
-                      ),
+                      const Icon(Icons.circle_notifications_outlined,
+                          size: 50, color: Color.fromARGB(255, 79, 72, 122))
                     ],
-                  ),
-                ),
-                const Icon(Icons.circle_notifications_outlined,
-                    size: 50, color: Color.fromARGB(255, 79, 72, 122))
-              ],
-            )),
-            //Second Container (Search Bar)
-            const SizedBox(height: 30),
-            Container(
-              child: Container(
-                width: double.infinity,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(31, 148, 149, 173),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: TextFormField(
-                  decoration: WidgetStyle().textInputDecorator.copyWith(
-                        prefixIcon: const Icon(Icons.search),
-                        hintText: "Search For",
-                        suffixIcon: const Icon(
-                          Icons.filter_1_outlined,
-                          color: Colors.black,
-                        ),
+                  )),
+                  //Second Container (Search Bar)
+                  const SizedBox(height: 30),
+                  Container(
+                    child: Container(
+                      width: double.infinity,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(31, 148, 149, 173),
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                ),
+                      child: TextFormField(
+                        decoration: WidgetStyle().textInputDecorator.copyWith(
+                              prefixIcon: const Icon(Icons.search),
+                              hintText: "Search For",
+                              suffixIcon: const Icon(
+                                Icons.filter_1_outlined,
+                                color: Colors.black,
+                              ),
+                            ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  //Third Container (Discound Page)
+                  Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        fit: BoxFit.fill,
+                        image: AssetImage("images/discournt_pic.png"),
+                      ),
+                      color: Colors.blueAccent,
+                      borderRadius: BorderRadius.circular(
+                        20,
+                      ),
+                    ),
+                    width: double.infinity,
+                    height: 150,
+                  ),
+                  const SizedBox(height: 30),
+                  CourseFilterContainer(),
+                  ElevatedButton(
+                    onPressed: logout,
+                    child: const Text("Logout"),
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(height: 30),
-            //Third Container (Discound Page)
-            Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  fit: BoxFit.fill,
-                  image: AssetImage("images/discournt_pic.png"),
-                ),
-                color: Colors.blueAccent,
-                borderRadius: BorderRadius.circular(
-                  20,
-                ),
-              ),
-              width: double.infinity,
-              height: 150,
-            ),
-            const SizedBox(height: 30),
-            CourseFilterContainer(),
-            ElevatedButton(
-              onPressed: logout,
-              child: const Text("Logout"),
-            ),
-          ],
-        ),
+            );
+          }
+        },
       ),
     );
   }
@@ -152,15 +170,26 @@ class _CourseFilterContainerState extends State<CourseFilterContainer> {
     for (var category in mainCategory_List) {
       main_category_widget.add(
         TextButton(
-          onPressed: () async {
-            List<dynamic> subCategories =
-                await getSubCategory(selectedCategory);
-            setState(
-              () {
-                selectedCategory = category;
-                subCateogry_List = subCategories;
-              },
-            );
+          onPressed: () {
+            print("$category is selected");
+            filterSubCategories(category);
+            // try {
+            //   List<dynamic> subCategories =
+            //       await getSubCategory(selectedCategory);
+            //   setState(
+            //     () {
+            //       selectedCategory = category;
+            //       subCateogry_List = subCategories;
+            //     },
+            //   );
+            // } catch (e) {
+            //   Column(
+            //     children: [
+            //       Text(e.toString()),
+            //       CircularProgressIndicator(),
+            //     ],
+            //   );
+            // }
           },
           style: ButtonStyle(
             foregroundColor: MaterialStateProperty.all(
@@ -315,11 +344,15 @@ class _CourseFilterContainerState extends State<CourseFilterContainer> {
                             children: snapshot.data!,
                           );
                         } else {
-                          return Container(
-                            height: 30,
-                            width: 30,
-                            color: Colors.blue,
-                          );
+                          if (snapshot.hasError) {
+                            return CircularProgressIndicator();
+                          } else {
+                            return Container(
+                              height: 30,
+                              width: 30,
+                              color: Colors.blue,
+                            );
+                          }
                         }
                       },
                     ),
@@ -333,13 +366,17 @@ class _CourseFilterContainerState extends State<CourseFilterContainer> {
                       if (snapshot.connectionState == ConnectionState.active) {
                         return CircularProgressIndicator();
                       } else {
-                        return SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: snapshot.data!,
-                          ),
-                        );
+                        if (snapshot.hasData) {
+                          return SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: snapshot.data!,
+                            ),
+                          );
+                        } else {
+                          return Container();
+                        }
                       }
                     },
                   ),
@@ -429,9 +466,17 @@ class _StudentNameSectionState extends State<StudentNameSection> {
   }
 }
 
+filterSubCategories(category) {
+  List subCategoryList = [];
+  for (var data in courseData) {
+    if (data.contains(category)) {
+      print("Data = ${data[1]}");
+    }
+  }
+}
+
 Future<List> getSubCategory(String selectedCategory) async {
   List<String> subCategoryList = [];
-  List<dynamic> courseData = await getCourseData();
   for (var course in courseData) {
     if (course.contains(selectedCategory) &&
         !subCategoryList.contains(
@@ -446,7 +491,6 @@ Future<List> getSubCategory(String selectedCategory) async {
 
 Future<List> getCourseList() async {
   List<String> course_list = [];
-  List<dynamic> courseData = await getCourseData();
   for (var course in courseData) {
     if (course.contains(selectedCategory) &&
         course.contains(selected_subcategory)) {
@@ -460,8 +504,8 @@ Future<List<Widget>> getCourListWidget(BuildContext context) async {
   List<Widget> courseListWidget = [];
   for (var course in await getCourseList()) {
     try {
-      final data = await getEachCourseData(
-          selectedCategory, selected_subcategory, course);
+      final data =
+          await getCourseData(selectedCategory, selected_subcategory, course);
 
       Course Cr = Course(
           name: data['name'],
@@ -503,6 +547,6 @@ Future<List<Widget>> getCourListWidget(BuildContext context) async {
       print("Error = ${e}");
     }
   }
-
+  print("Length of courseListWidget = ${courseListWidget.length}");
   return courseListWidget;
 }
