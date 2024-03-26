@@ -26,6 +26,7 @@ List<dynamic> courseData = [];
 String selectedCategory = mainCategory_List[0];
 String selected_subcategory = "";
 List<dynamic> currentCourses = [];
+List courseListWidget = [];
 getAllData() async {
   courseData = await getAllCourses();
   for (var course in courseData) {
@@ -172,24 +173,12 @@ class _CourseFilterContainerState extends State<CourseFilterContainer> {
         TextButton(
           onPressed: () {
             print("$category is selected");
-            filterSubCategories(category);
-            // try {
-            //   List<dynamic> subCategories =
-            //       await getSubCategory(selectedCategory);
-            //   setState(
-            //     () {
-            //       selectedCategory = category;
-            //       subCateogry_List = subCategories;
-            //     },
-            //   );
-            // } catch (e) {
-            //   Column(
-            //     children: [
-            //       Text(e.toString()),
-            //       CircularProgressIndicator(),
-            //     ],
-            //   );
-            // }
+            setState(
+              () {
+                subCateogry_List = filterSubCategories(category);
+                selectedCategory = category;
+              },
+            );
           },
           style: ButtonStyle(
             foregroundColor: MaterialStateProperty.all(
@@ -211,11 +200,37 @@ class _CourseFilterContainerState extends State<CourseFilterContainer> {
       List<Widget> sub_category_list_widget = [];
       for (var subCategory in subCateogry_List) {
         sub_category_list_widget.add(
+          // TextButton(
+          //   onPressed: () {
+          //     setState(
+          //       () {
+          //         selected_subcategory = subCategory;
+          //         getCourListWidget(context);
+          //       },
+          //     );
+          //   },
+          //   style: ButtonStyle(
+          //     foregroundColor: MaterialStateProperty.all(
+          //       selected_subcategory == subCategory
+          //           ? Color(0xff0051f5)
+          //           : Color(0xffa0a4ab),
+          //     ),
+          //   ),
+          //   child: Text(
+          //     subCategory,
+          //     style: TextStyle(
+          //       fontSize: 18,
+          //     ),
+          //   ),
+          // ),
           TextButton(
-            onPressed: () {
+            onPressed: () async {
               setState(() {
                 selected_subcategory = subCategory;
-                getCourListWidget(context);
+              });
+              List<Widget> widgets = await getCourListWidget(context);
+              setState(() {
+                courseListWidget = widgets;
               });
             },
             style: ButtonStyle(
@@ -467,25 +482,15 @@ class _StudentNameSectionState extends State<StudentNameSection> {
 }
 
 filterSubCategories(category) {
-  List subCategoryList = [];
+  var subCategoryList = [];
   for (var data in courseData) {
     if (data.contains(category)) {
-      print("Data = ${data[1]}");
+      subCategoryList.add(data[1]);
     }
   }
-}
-
-Future<List> getSubCategory(String selectedCategory) async {
-  List<String> subCategoryList = [];
-  for (var course in courseData) {
-    if (course.contains(selectedCategory) &&
-        !subCategoryList.contains(
-          course[1],
-        )) {
-      subCategoryList.add(course[1]);
-    }
-  }
-  await Future.delayed(Durations.medium4);
+  var temp = subCategoryList.toSet();
+  subCategoryList = temp.toList();
+  print("Sub Category List in filter Sub Category = ${subCategoryList}");
   return subCategoryList;
 }
 
@@ -500,23 +505,79 @@ Future<List> getCourseList() async {
   return course_list;
 }
 
+// Future<List<Widget>> getCourListWidget(BuildContext context) async {
+//   for (var course in await getCourseList()) {
+//     try {
+//       final data =
+//           await getCourseData(selectedCategory, selected_subcategory, course);
+//       Course Cr = Course(
+//           name: data['name'],
+//           category: selectedCategory,
+//           subCategory: selected_subcategory,
+//           price: data['price'],
+//           total_number_of_student: data['students'],
+//           tutor: data['tutor'],
+//           rating: data['rating'],
+//           lecture_link: data['lectures']);
+//       course_list.add(Cr);
+//       GestureDetector viewBoxGesture = GestureDetector(
+//         onTap: () {
+//           Navigator.push(
+//             context,
+//             MaterialPageRoute(
+//               builder: (context) => CourseDetailPage(
+//                 course_name: data['name'],
+//                 instructure_name: data['tutor'],
+//                 price: data['price'],
+//                 rating: data['rating'],
+//                 subCategory: selected_subcategory,
+//                 videos_link: data['lectures'],
+//               ),
+//             ),
+//           );
+//         },
+//         child: Cr.viewBox(
+//           context,
+//         ),
+//       );
+//       courseListWidget.add(viewBoxGesture);
+//       courseListWidget.add(
+//         SizedBox(
+//           width: 30,
+//         ),
+//       );
+//     } catch (e) {
+//       print("Error = ${e}");
+//     }
+//   }
+//   return courseListWidget;
+// }
 Future<List<Widget>> getCourListWidget(BuildContext context) async {
   List<Widget> courseListWidget = [];
-  for (var course in await getCourseList()) {
-    try {
-      final data =
-          await getCourseData(selectedCategory, selected_subcategory, course);
+  List courseList = await getCourseList(); // Call getCourseList() only once
 
+  // Fetch course data in parallel
+  List<Future> futures = [];
+
+  for (var course in courseList) {
+    futures.add(getCourseData(selectedCategory, selected_subcategory, course));
+  }
+
+  List<dynamic> results = await Future.wait(futures);
+
+  for (var data in results) {
+    try {
       Course Cr = Course(
-          name: data['name'],
-          category: selectedCategory,
-          subCategory: selected_subcategory,
-          price: data['price'],
-          total_number_of_student: data['students'],
-          tutor: data['tutor'],
-          rating: data['rating'],
-          lecture_link: data['lectures']);
-      course_list.add(Cr);
+        name: data['name'],
+        category: selectedCategory,
+        subCategory: selected_subcategory,
+        price: data['price'],
+        total_number_of_student: data['students'],
+        tutor: data['tutor'],
+        rating: data['rating'],
+        lecture_link: data['lectures'],
+      );
+
       GestureDetector viewBoxGesture = GestureDetector(
         onTap: () {
           Navigator.push(
@@ -533,20 +594,14 @@ Future<List<Widget>> getCourListWidget(BuildContext context) async {
             ),
           );
         },
-        child: Cr.viewBox(
-          context,
-        ),
+        child: Cr.viewBox(context),
       );
+
       courseListWidget.add(viewBoxGesture);
-      courseListWidget.add(
-        SizedBox(
-          width: 30,
-        ),
-      );
+      courseListWidget.add(SizedBox(width: 30));
     } catch (e) {
-      print("Error = ${e}");
+      print("Error = $e");
     }
   }
-  print("Length of courseListWidget = ${courseListWidget.length}");
   return courseListWidget;
 }
