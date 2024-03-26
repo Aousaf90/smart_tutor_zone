@@ -49,9 +49,6 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
       body: FutureBuilder(
         future: lectureVideos.getSongsFromPlaylist(),
         builder: (context, snapshot) {
-          final playlist_data = snapshot.data as Map<String, dynamic>;
-          final total_lecturs = playlist_data['total_lectures'];
-          final videos_list = playlist_data['videos'];
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Container(
               child: Center(
@@ -65,6 +62,9 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
               ),
             );
           } else {
+            final playlist_data = snapshot.data as Map<String, dynamic>;
+            final total_lecturs = playlist_data['total_lectures'];
+            final videos_list = playlist_data['videos'];
             return Container(
               padding: EdgeInsets.only(bottom: 20),
               child: SingleChildScrollView(
