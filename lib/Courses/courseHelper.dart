@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:smart_tutor_zone/Courses/coursesModel.dart';
 
+List course_view_box = [];
 Future<Set<String>> getMainCategories() async {
   CollectionReference collectionRef =
       FirebaseFirestore.instance.collection("Courses_Categories");
@@ -21,7 +24,7 @@ Future<List<String>> getSubCategories(String categoryName) async {
 
 Future<Map<String, dynamic>> getCourses(
     String mainCategory, String subCategory) async {
-  Map<String, dynamic> courseDetail = {};
+  Map<String, dynamic> courseDetail = Map();
   List course_list = [];
   QuerySnapshot querySnapshot = await FirebaseFirestore.instance
       .collection("/Courses_Categories/$mainCategory/$subCategory")
@@ -54,7 +57,7 @@ getAllCategories() async {
   List sub_courses_list = [];
   final course_details = {};
   Map<String, List> subCategoryDetail = {};
-  Map<String, dynamic> course_detail = {};
+  Map<String, dynamic> course_detail = Map();
   Set<String> main_categories = await getMainCategories();
   await Future.forEach(
     main_categories,
@@ -99,6 +102,29 @@ Future<Map<String, dynamic>> getCourseData(
 
 Future<void> enrollStudentWithCourse(String studentEmail) async {
   print("Student to be Enrolled = $studentEmail");
+}
+
+setViewBoxList(List list_of_widget) {
+  course_view_box = list_of_widget;
+}
+
+GestureDetector getViewBox(String course_name) {
+  try {
+    GestureDetector specificGestureDetector = course_view_box.firstWhere(
+      <GestureDetector>(gestureDetector) {
+        return (gestureDetector.child as Course).name == course_name;
+      },
+    ) as GestureDetector;
+    return specificGestureDetector;
+  } catch (e) {
+    return GestureDetector(
+      child: Container(
+        height: 40,
+        width: double.infinity,
+      ),
+      onTap: () {},
+    );
+  }
 }
 
 // Example usage:

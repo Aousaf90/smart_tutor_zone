@@ -7,8 +7,12 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/userModel.dart';
+import 'package:smart_tutor_zone/Courses/courseHelper.dart';
+import 'package:smart_tutor_zone/Pages/Curriculum.dart';
 import 'package:smart_tutor_zone/Pages/Models/course_enrollment.dart';
 import 'package:smart_tutor_zone/Pages/Models/videos_model.dart';
+import 'package:smart_tutor_zone/Pages/Payment/pay_for_course.dart';
+import 'package:smart_tutor_zone/helperFunction.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class CourseDetailPage extends StatefulWidget {
@@ -310,19 +314,25 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                           onPressed: () async {
                             String student_name =
                                 await Student().getStudentName().toString();
+                            ;
 
-                            CourseEnrollment()
-                                .enrollCourse(widget.course_name, student_name);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CoursePayment(
+                                    course_view_box:
+                                        getViewBox(widget.course_name),
+                                  ),
+                                ));
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(
-                                "Enroll Course . 499/-",
+                                "Enroll Course . ${widget.price}/-",
                                 style: TextStyle(
                                     fontSize: 18, color: Colors.white),
                               ),
-                              SizedBox(width: 30),
                               CircleAvatar(
                                 backgroundColor: Colors.white,
                                 child: Icon(Icons.arrow_forward),
