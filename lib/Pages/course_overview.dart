@@ -319,10 +319,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => CoursePayment(
-                                    course_view_box:
-                                        getViewBox(widget.course_name),
-                                  ),
+                                  builder: (context) => CoursePayment(),
                                 ));
                           },
                           child: Row(

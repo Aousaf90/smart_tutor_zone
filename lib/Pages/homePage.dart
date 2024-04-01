@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/LoginPage.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/userModel.dart';
 import 'package:smart_tutor_zone/Courses/coursesModel.dart';
+import 'package:smart_tutor_zone/Courses/selectedCourse.dart';
 import 'package:smart_tutor_zone/Pages/allCategory.dart';
 import 'package:smart_tutor_zone/Pages/course_overview.dart';
 import 'package:smart_tutor_zone/helperFunction.dart';
@@ -506,16 +507,26 @@ Future<List<Widget>> getCourListWidget(BuildContext context) async {
 
       GestureDetector viewBoxGesture = GestureDetector(
         onTap: () {
+          SelectedCourse selectedCourse = SelectedCourse();
+          selectedCourse.setValues(
+              data['name'],
+              data['tutor'],
+              data['price'],
+              data['lectures'],
+              data['rating'],
+              selectedCategory,
+              selected_subcategory);
+
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => CourseDetailPage(
-                course_name: data['name'],
-                instructure_name: data['tutor'],
-                price: data['price'],
-                rating: data['rating'],
-                subCategory: selected_subcategory,
-                videos_link: data['lectures'],
+                course_name: selectedCourse.get_course_name,
+                instructure_name: selectedCourse.get_tutor,
+                price: selectedCourse.get_price,
+                rating: selectedCourse.get_rating,
+                subCategory: selectedCourse.get_sub_category,
+                videos_link: selectedCourse.get_lecture_link,
               ),
             ),
           );
