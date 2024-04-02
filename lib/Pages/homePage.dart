@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/LoginPage.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/userModel.dart';
 import 'package:smart_tutor_zone/Courses/coursesModel.dart';
-import 'package:smart_tutor_zone/Courses/selectedCourse.dart';
 import 'package:smart_tutor_zone/Pages/allCategory.dart';
 import 'package:smart_tutor_zone/Pages/course_overview.dart';
 import 'package:smart_tutor_zone/helperFunction.dart';
@@ -495,16 +494,7 @@ Future<List<Widget>> getCourListWidget(BuildContext context) async {
 
   for (var data in results) {
     try {
-      Course Cr = Course(
-          // name: data['name'],
-          // category: selectedCategory,
-          // subCategory: selected_subcategory,
-          // price: data['price'],
-          // total_number_of_student: data['students'],
-          // tutor: data['tutor'],
-          // rating: data['rating'],
-          // lecture_link: data['lectures'],
-          );
+      Course Cr = Course();
       Provider.of<Course>(context, listen: false).setValues(
           data['name'],
           selectedCategory,

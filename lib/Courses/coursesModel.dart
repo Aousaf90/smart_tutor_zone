@@ -14,7 +14,6 @@ class Course extends ChangeNotifier {
   String _subCategory = "";
   String _lecture_link = "";
   Map<String, dynamic> _selected_course = {};
-
   UnmodifiableMapView get selectedCourseDetail {
     return UnmodifiableMapView(_selected_course);
   }
