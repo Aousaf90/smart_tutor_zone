@@ -1,26 +1,65 @@
+import 'dart:collection';
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:smart_tutor_zone/Pages/course_overview.dart';
 
-class Course {
-  String name;
-  String price;
-  int rating;
-  String tutor;
-  List total_number_of_student = [];
-  String category = "";
-  String subCategory = "";
-  String lecture_link = "";
-  Course(
-      {this.name = 'Computer Science',
-      this.category = "Technology",
-      this.price = "799/-",
-      this.rating = 0,
-      this.subCategory = "Basic",
-      this.total_number_of_student = const [],
-      this.tutor = "Sir Kamran",
-      this.lecture_link = "https://youtube.com/"});
+class Course extends ChangeNotifier {
+  String _name = "";
+  String _price = "";
+  int _rating = 0;
+  String _tutor = "";
+  List _total_number_of_student = [];
+  String _category = "";
+  String _subCategory = "";
+  String _lecture_link = "";
+  Map<String, dynamic> _selected_course = {};
+  UnmodifiableMapView get selectedCourseDetail {
+    return UnmodifiableMapView(_selected_course);
+  }
+
+  void selectedCourse(
+      String name,
+      String category,
+      String price,
+      int rating,
+      String tutor,
+      String subCategory,
+      String lecture_link,
+      List total_number_of_student) {
+    _selected_course = {
+      'name': name,
+      'price': price,
+      'rating': rating,
+      'tutor': tutor,
+      'students': total_number_of_student,
+      'category': category,
+      'subCategory': subCategory,
+      'lectures': lecture_link,
+    };
+    notifyListeners();
+  }
+
+  void setValues(
+      String name,
+      String category,
+      String price,
+      int rating,
+      String tutor,
+      String subCategory,
+      String lecture_link,
+      List total_number_of_student) {
+    _name = name;
+    _price = price;
+    _rating = rating;
+    _tutor = tutor;
+    _total_number_of_student = total_number_of_student;
+    _category = category;
+    _subCategory = subCategory;
+    _lecture_link = lecture_link;
+    print("Value for ${name} Course has been set");
+    notifyListeners();
+  }
 
   Widget viewBox(BuildContext context) {
     return Container(
@@ -58,14 +97,14 @@ class Course {
                     color: Color(0xff088072),
                   ),
                   title: Text(
-                    name,
+                    _name,
                     style: TextStyle(
                       color: Color(0xfffa680e),
                     ),
                   ),
                 ),
                 Text(
-                  category,
+                  _category,
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
                   ),
@@ -74,7 +113,7 @@ class Course {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      price,
+                      _price,
                       style: TextStyle(
                         color: Color(0xff3284f7),
                       ),
@@ -83,9 +122,9 @@ class Course {
                       Icons.star,
                       color: Color(0xfffacc42),
                     ),
-                    Text("$rating"),
+                    Text("$_rating"),
                     Text("|"),
-                    Text("$total_number_of_student Std"),
+                    Text("$_total_number_of_student Std"),
                   ],
                 ),
               ],
@@ -94,5 +133,6 @@ class Course {
         ],
       ),
     );
+    notifyListeners();
   }
 }
