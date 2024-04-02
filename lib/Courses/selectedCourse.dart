@@ -1,4 +1,6 @@
-class SelectedCourse {
+import 'package:flutter/foundation.dart';
+
+class SelectedCourse extends ChangeNotifier {
   String _course_name = "";
   String _tutor = "";
   String _price = "";
@@ -16,6 +18,13 @@ class SelectedCourse {
     _sub_category = sub_category;
     _tutor = tutor;
     _rating = rating;
+    notifyListeners();
+  }
+
+  showvalues() {
+    print("Course Name = ${_course_name}");
+    print("Category Name = ${_category}");
+    print("Sub Category Name = ${_sub_category}");
   }
 
 // Getter

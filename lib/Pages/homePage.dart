@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/LoginPage.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/userModel.dart';
 import 'package:smart_tutor_zone/Courses/coursesModel.dart';
@@ -495,43 +496,52 @@ Future<List<Widget>> getCourListWidget(BuildContext context) async {
   for (var data in results) {
     try {
       Course Cr = Course(
-        name: data['name'],
-        category: selectedCategory,
-        subCategory: selected_subcategory,
-        price: data['price'],
-        total_number_of_student: data['students'],
-        tutor: data['tutor'],
-        rating: data['rating'],
-        lecture_link: data['lectures'],
-      );
-
+          // name: data['name'],
+          // category: selectedCategory,
+          // subCategory: selected_subcategory,
+          // price: data['price'],
+          // total_number_of_student: data['students'],
+          // tutor: data['tutor'],
+          // rating: data['rating'],
+          // lecture_link: data['lectures'],
+          );
+      Provider.of<Course>(context, listen: false).setValues(
+          data['name'],
+          selectedCategory,
+          data['price'],
+          data['rating'],
+          data['tutor'],
+          selected_subcategory,
+          data['lectures'],
+          data['students']);
       GestureDetector viewBoxGesture = GestureDetector(
         onTap: () {
-          SelectedCourse selectedCourse = SelectedCourse();
-          selectedCourse.setValues(
+          Provider.of<Course>(context, listen: false).selectedCourse(
               data['name'],
-              data['tutor'],
-              data['price'],
-              data['lectures'],
-              data['rating'],
               selectedCategory,
-              selected_subcategory);
-
+              data['price'],
+              data['rating'],
+              data['tutor'],
+              selected_subcategory,
+              data['lectures'],
+              data['students']);
+          var courseData =
+              Provider.of<Course>(context, listen: false).selectedCourseDetail;
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => CourseDetailPage(
-                course_name: selectedCourse.get_course_name,
-                instructure_name: selectedCourse.get_tutor,
-                price: selectedCourse.get_price,
-                rating: selectedCourse.get_rating,
-                subCategory: selectedCourse.get_sub_category,
-                videos_link: selectedCourse.get_lecture_link,
+                course_name: courseData['name'],
+                instructure_name: courseData['tutor'],
+                price: courseData['price'],
+                rating: courseData['rating'],
+                subCategory: courseData['subCategory'],
+                videos_link: courseData['lectures'],
               ),
             ),
           );
         },
-        child: Cr.viewBox(context),
+        child: Provider.of<Course>(context, listen: false).viewBox(context),
       );
       courseListWidget.add(viewBoxGesture);
       courseListWidget.add(SizedBox(width: 30));

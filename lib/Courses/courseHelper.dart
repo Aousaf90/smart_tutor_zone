@@ -108,24 +108,7 @@ setViewBoxList(List list_of_widget) {
   course_view_box = list_of_widget;
 }
 
-GestureDetector getViewBox(String course_name) {
-  try {
-    GestureDetector specificGestureDetector = course_view_box.firstWhere(
-      <GestureDetector>(gestureDetector) {
-        return (gestureDetector.child as Course).name == course_name;
-      },
-    ) as GestureDetector;
-    return specificGestureDetector;
-  } catch (e) {
-    return GestureDetector(
-      child: Container(
-        height: 40,
-        width: double.infinity,
-      ),
-      onTap: () {},
-    );
-  }
-}
+
 
 // Example usage:
 

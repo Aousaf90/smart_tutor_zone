@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_tutor_zone/Courses/coursesModel.dart';
 import 'package:smart_tutor_zone/Pages/homePage.dart';
 import './AuthenticationPage/Register.dart';
 import './helperFunction.dart';
@@ -35,14 +37,19 @@ class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        scaffoldBackgroundColor: const Color.fromARGB(255, 247, 245, 245),
-      ),
-      title: 'Main Page',
-      home: _isLoggedIn ? const homePage() : const RegisterPage(),
-      // home: Text("Login Status $_isLoggedIn"),
+    return ChangeNotifierProvider<Course>(
+      create: (context) => Course(),
+      builder: (context, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            scaffoldBackgroundColor: const Color.fromARGB(255, 247, 245, 245),
+          ),
+          title: 'Main Page',
+          home: _isLoggedIn ? const homePage() : const RegisterPage(),
+          // home: Text("Login Status $_isLoggedIn"),
+        );
+      },
     );
   }
 
