@@ -1,6 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_tutor_zone/AuthenticationPage/userModel.dart';
+import 'package:smart_tutor_zone/Courses/coursesModel.dart';
 
 class CardPayment extends StatefulWidget {
   @override
@@ -172,7 +175,13 @@ class _CardPaymentState extends State<CardPayment> {
               ),
               width: 350,
               child: TextButton(
-                onPressed: () {},
+                onPressed: () async {
+                  Student student = Student();
+                  final student_email = await student.getStudentEmail();
+                  print("Student email in payment page = ${student_email}");
+                  Provider.of<Course>(context).enrollStudent(student_email!);
+                  // student.enrollStudent(course_id)
+                },
                 child: Text(
                   "Pay Amount",
                   style: TextStyle(

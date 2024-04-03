@@ -264,30 +264,29 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       );
       try {
-        await auth
-            .createUserWithEmailAndPassword(
-                email: studentEmail, password: studentPassword)
-            .then(
-          (value) {
-            setState(
-              () {
-                final uid = auth.currentUser!.uid;
-                final studentModel = Student();
-                helperFunction.saveStudentEmail(studentEmail);
-                helperFunction.saveUserLogInStatus(true);
-                helperFunction.saveStudentName(studentName);
-                helperFunction.saveStudentEducation(studentEducation);
-                helperFunction.savePhoneNumber("03061310090");
-                studentModel.createStudentEntity(
-                    student_email: studentEmail,
-                    student_PhoneNumber: "03061310090",
-                    student_name: studentName,
-                    student_Education: studentEducation);
-              },
-            );
-            WidgetStyle().NextScreen(context, const homePage());
-          },
-        );
+        final userCredential = await auth.createUserWithEmailAndPassword(
+            email: studentEmail, password: studentPassword);
+        final uid = userCredential.user!.uid;
+        if (userCredential.user != null) {
+          print("Student Name = ${studentName}");
+          print("Student Email = ${studentEmail}");
+          final studentModel = Student();
+          studentModel.createStudentEntity(
+            student_email: studentEmail,
+            student_PhoneNumber: "03061310090",
+            student_name: studentName,
+            student_Education: studentEducation,
+            uid: uid,
+          );
+          helperFunction.saveStudentEmail(studentEmail);
+          helperFunction.saveUserLogInStatus(true);
+          helperFunction.saveStudentName(studentName);
+          helperFunction.saveStudentEducation(studentEducation);
+          helperFunction.savePhoneNumber("03061310090");
+          helperFunction.saveCourseEnrolled([]);
+
+          WidgetStyle().NextScreen(context, const homePage());
+        }
       } on FirebaseAuthException catch (e) {
         // Dismiss the dialog
         Navigator.of(context).pop();

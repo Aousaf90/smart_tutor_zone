@@ -9,7 +9,6 @@ import 'package:flutter/widgets.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/userModel.dart';
 import 'package:smart_tutor_zone/Courses/courseHelper.dart';
 import 'package:smart_tutor_zone/Pages/Curriculum.dart';
-import 'package:smart_tutor_zone/Pages/Models/course_enrollment.dart';
 import 'package:smart_tutor_zone/Pages/Models/videos_model.dart';
 import 'package:smart_tutor_zone/Pages/Payment/pay_for_course.dart';
 import 'package:smart_tutor_zone/helperFunction.dart';
