@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:smart_tutor_zone/Courses/courseHelper.dart';
 import 'package:smart_tutor_zone/Pages/course_overview.dart';
 
 class Course extends ChangeNotifier {
@@ -59,6 +60,14 @@ class Course extends ChangeNotifier {
     _lecture_link = lecture_link;
     print("Value for ${name} Course has been set");
     notifyListeners();
+  }
+
+  enrollStudent(String enrollStudent) async {
+    var isenrolled = await enrollStudentToCourse(
+        _category, _subCategory, _name, enrollStudent);
+    if (isenrolled) {
+      _total_number_of_student.add(enrollStudent);
+    }
   }
 
   Widget viewBox(BuildContext context) {

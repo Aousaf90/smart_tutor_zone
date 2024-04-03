@@ -6,7 +6,7 @@ class helperFunction {
   static String emailID = "emailID";
   static String EducationID = "educationID";
   static String PhoneNumberID = "phoneNumberID";
-
+  static String courseEnrolledID = "CourseEnrolled";
   static Future<bool> saveUserLogInStatus(loginStatus) async {
     SharedPreferences sf = await SharedPreferences.getInstance();
     return sf.setBool(userLoginStatus, loginStatus);
@@ -25,6 +25,11 @@ class helperFunction {
   static Future<bool> saveStudentEmail(studentEmail) async {
     SharedPreferences sf = await SharedPreferences.getInstance();
     return sf.setString(emailID, studentEmail);
+  }
+
+  static Future<bool> saveCourseEnrolled(courseEnrolled) async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return sf.setStringList(courseEnrolledID, courseEnrolled);
   }
 
   static Future<bool> saveStudentEducation(studentEducation) async {
