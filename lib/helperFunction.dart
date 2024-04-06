@@ -57,6 +57,11 @@ class helperFunction {
     return sf.getString(EducationID);
   }
 
+  static Future<List<String>?> getStudentCourseData() async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return sf.getStringList(courseEnrolledID);
+  }
+
   static Future<String?> getPhoneNumber() async {
     SharedPreferences sf = await SharedPreferences.getInstance();
     return sf.getString(PhoneNumberID);

@@ -108,25 +108,6 @@ setViewBoxList(List list_of_widget) {
   course_view_box = list_of_widget;
 }
 
-Future<bool> enrollStudentToCourse(String category, String subCategory,
-    String course, String student_email) async {
-  try {
-    DocumentReference documentReference = FirebaseFirestore.instance
-        .doc("/Courses_Categories/$category/$subCategory/$course");
-    DocumentSnapshot documentSnapshot = await documentReference.get();
-    if (documentSnapshot.exists) {
-      List<dynamic> existingList = documentSnapshot.get('students');
-      print("List of Students = ${existingList}");
-      existingList.add(student_email);
-      documentReference.update(
-        {'students': existingList},
-      );
-    }
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
 
 // Example usage:
 

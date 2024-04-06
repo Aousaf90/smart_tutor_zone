@@ -15,11 +15,6 @@ class Student {
   }) async {
     try {
       final studentRef = FirebaseFirestore.instance.collection("Students");
-      print("Student Collection ref = ${studentRef}");
-      print("Student Name in Student Model = ${student_name}");
-      print("Student Email in Student Model = ${student_email}");
-      print("Student Phone Number in Student Model = ${student_PhoneNumber}");
-      print("Student Education in Student Model = ${student_Education}");
       data = {
         "email": student_email,
         "name": student_name,
@@ -27,16 +22,11 @@ class Student {
         "Education": student_Education,
         "Courses": []
       };
-      print(
-          "Student Id = ${studentRef.where('email', isEqualTo: 'aousafsuleman@gmail.com')}");
-      print("Data in Student Model = ${data}");
       await studentRef.doc(uid).set(data);
     } on FirebaseException {
       print("There is some error");
     }
   }
-
-  addCourseToCart(String course) async {}
 
   Future<String?> getStudentName() async {
     return await helperFunction.getStudentName();

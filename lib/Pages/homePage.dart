@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/LoginPage.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/userModel.dart';
 import 'package:smart_tutor_zone/Courses/coursesModel.dart';
+import 'package:smart_tutor_zone/Pages/Lectures/lectures_catalog.dart';
 import 'package:smart_tutor_zone/Pages/allCategory.dart';
 import 'package:smart_tutor_zone/Pages/course_overview.dart';
 import 'package:smart_tutor_zone/helperFunction.dart';
@@ -505,7 +506,7 @@ Future<List<Widget>> getCourListWidget(BuildContext context) async {
           data['lectures'],
           data['students']);
       GestureDetector viewBoxGesture = GestureDetector(
-        onTap: () {
+        onTap: () async {
           Provider.of<Course>(context, listen: false).selectedCourse(
               data['name'],
               selectedCategory,
@@ -517,19 +518,25 @@ Future<List<Widget>> getCourListWidget(BuildContext context) async {
               data['students']);
           var courseData =
               Provider.of<Course>(context, listen: false).selectedCourseDetail;
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CourseDetailPage(
-                course_name: courseData['name'],
-                instructure_name: courseData['tutor'],
-                price: courseData['price'],
-                rating: courseData['rating'],
-                subCategory: courseData['subCategory'],
-                videos_link: courseData['lectures'],
+          String student_email = await helperFunction.getStudentEmail() ?? "";
+
+          if (data['students'].contains(student_email)) {
+            WidgetStyle().NextScreen(context, LectureCatalogPage());
+          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CourseDetailPage(
+                  course_name: courseData['name'],
+                  instructure_name: courseData['tutor'],
+                  price: courseData['price'],
+                  rating: courseData['rating'],
+                  subCategory: courseData['subCategory'],
+                  videos_link: courseData['lectures'],
+                ),
               ),
-            ),
-          );
+            );
+          }
         },
         child: Provider.of<Course>(context, listen: false).viewBox(context),
       );

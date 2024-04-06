@@ -58,16 +58,7 @@ class Course extends ChangeNotifier {
     _category = category;
     _subCategory = subCategory;
     _lecture_link = lecture_link;
-    print("Value for ${name} Course has been set");
     notifyListeners();
-  }
-
-  enrollStudent(String enrollStudent) async {
-    var isenrolled = await enrollStudentToCourse(
-        _category, _subCategory, _name, enrollStudent);
-    if (isenrolled) {
-      _total_number_of_student.add(enrollStudent);
-    }
   }
 
   Widget viewBox(BuildContext context) {
@@ -133,7 +124,7 @@ class Course extends ChangeNotifier {
                     ),
                     Text("$_rating"),
                     Text("|"),
-                    Text("$_total_number_of_student Std"),
+                    Text("${_total_number_of_student.length} Std"),
                   ],
                 ),
               ],
