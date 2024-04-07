@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:smart_tutor_zone/Pages/Lectures/lectures_catalog.dart';
 import 'package:smart_tutor_zone/style.dart';
 
