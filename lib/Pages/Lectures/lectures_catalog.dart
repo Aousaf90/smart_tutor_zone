@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_tutor_zone/Courses/coursesModel.dart';
+import 'package:smart_tutor_zone/Pages/Lectures/lecture_play.dart';
 import 'package:smart_tutor_zone/Pages/homePage.dart';
 import 'package:smart_tutor_zone/style.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
@@ -37,40 +38,66 @@ class LectureCatalogPage extends StatelessWidget {
                 } else {
                   Map<String, dynamic> course_data = snapshot.data!;
                   return Container(
-                      child: ListView.builder(
-                    itemCount: course_data['videos'].length,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        height: 80,
-                        width: double.infinity,
-                        child: Row(
-                          children: [
-                            CircleAvatar(
-                              radius: 50,
-                              child: Text(
-                                index.toString(),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(
+                        30,
+                      ),
+                    ),
+                    child: ListView.builder(
+                      itemCount: course_data['videos'].length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            height: 80,
+                            width: double.infinity,
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: Color(
+                                  0xfff5f9ff,
+                                ),
+                                child: Text("$index"),
+                                radius: 20,
+                              ),
+                              title: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  course_name_widget(
+                                      course_data: course_data,
+                                      index_number: index),
+                                  Text(
+                                    "${course_data['videos'][index][1]}",
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              trailing: IconButton(
+                                color: Color(0xff005af5),
+                                onPressed: () => WidgetStyle().NextScreen(
+                                    context,
+                                    LecturePlay(
+                                      lecture_title: course_data['videos']
+                                          [index][0],
+                                      videoId: course_data['id'],
+                                    )),
+                                icon: Icon(
+                                  Icons.play_arrow,
+                                ),
                               ),
                             ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  course_data["videos"][index][0],
-                                ),
-                                Text(
-                                  "${course_data['videos'][index][1].toString()} seconds",
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ));
+                          ),
+                        );
+                      },
+                    ),
+                  );
                 }
               },
             ),
@@ -91,7 +118,9 @@ class LectureCatalogPage extends StatelessWidget {
       var playlist_data = await yt.playlists.get(lecture_link);
       var title = Provider.of<Course>(context, listen: false)
           .selectedCourseDetail['name'];
+      String videoId = "";
       await for (var video in yt.playlists.getVideos(playlist_data.id)) {
+        videoId = video.id.toString();
         Duration video_duration = video.duration ??
             Duration(days: 0, hours: 0, minutes: 0, seconds: 0);
         int video_dur = video_duration.inSeconds;
@@ -99,8 +128,10 @@ class LectureCatalogPage extends StatelessWidget {
         var video_detail = [video.title, video_dur];
         videos.add(video_detail);
       }
+
       var total_videos = videos.length;
       course_detail = {
+        'id': videoId,
         'title': title,
         'videos': videos,
         'total_videos': total_videos,
@@ -111,5 +142,39 @@ class LectureCatalogPage extends StatelessWidget {
       print("Error occur while retriving playlist info = ${e}");
       return {};
     }
+  }
+}
+
+class course_name_widget extends StatelessWidget {
+  course_name_widget({
+    super.key,
+    required this.course_data,
+    required this.index_number,
+  });
+  var index_number;
+  final Map<String, dynamic> course_data;
+
+  @override
+  Widget build(BuildContext context) {
+    var text = course_data['videos'][index_number][0];
+    if (text.length >= 33) {
+      text = text.substring(0, 33) + "...";
+      return Text(
+        text,
+        style: TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.bold,
+          overflow: TextOverflow.ellipsis,
+        ),
+      );
+    }
+    return Text(
+      course_data["videos"][index_number][0],
+      style: TextStyle(
+        fontSize: 15,
+        fontWeight: FontWeight.bold,
+        overflow: TextOverflow.fade,
+      ),
+    );
   }
 }
