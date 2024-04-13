@@ -37,6 +37,9 @@ class LectureCatalogPage extends StatelessWidget {
                   return Text("There is some error");
                 } else {
                   Map<String, dynamic> course_data = snapshot.data!;
+                  var total_items = (course_data['videos'] == null)
+                      ? null
+                      : course_data['videos'].length;
                   return Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -45,56 +48,73 @@ class LectureCatalogPage extends StatelessWidget {
                       ),
                     ),
                     child: ListView.builder(
-                      itemCount: course_data['videos'].length,
+                      itemCount: (total_items == null)
+                          ? 0
+                          : course_data['videos'].length,
                       itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            height: 80,
-                            width: double.infinity,
-                            child: ListTile(
-                              leading: CircleAvatar(
-                                backgroundColor: Color(
-                                  0xfff5f9ff,
+                        var video_duration = format_time(
+                          course_data['videos'][index][1],
+                        );
+
+                        return (total_items == null)
+                            ? Container(
+                                child: Center(
+                                  child: Text(
+                                      "There is some problem with the internet"),
                                 ),
-                                child: Text("$index"),
-                                radius: 20,
-                              ),
-                              title: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  course_name_widget(
-                                      course_data: course_data,
-                                      index_number: index),
-                                  Text(
-                                    "${course_data['videos'][index][1]}",
-                                    style: TextStyle(
-                                      fontSize: 10,
+                              )
+                            : Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  height: 80,
+                                  width: double.infinity,
+                                  child: ListTile(
+                                    leading: CircleAvatar(
+                                      backgroundColor: Color(
+                                        0xfff5f9ff,
+                                      ),
+                                      child: Text("${index + 1}"),
+                                      radius: 20,
+                                    ),
+                                    title: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        course_name_widget(
+                                            course_data: course_data,
+                                            index_number: index),
+                                        Text(
+                                          "${video_duration}",
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    trailing: IconButton(
+                                      color: Color(0xff005af5),
+                                      onPressed: () => WidgetStyle().NextScreen(
+                                        context,
+                                        LecturePlay(
+                                          lecture_title: course_data['videos']
+                                              [index][0],
+                                          videoId: course_data['videos'][index]
+                                              [2],
+                                        ),
+                                      ),
+                                      icon: Icon(
+                                        Icons.play_arrow,
+                                      ),
                                     ),
                                   ),
-                                ],
-                              ),
-                              trailing: IconButton(
-                                color: Color(0xff005af5),
-                                onPressed: () => WidgetStyle().NextScreen(
-                                    context,
-                                    LecturePlay(
-                                      lecture_title: course_data['videos']
-                                          [index][0],
-                                      videoId: course_data['id'],
-                                    )),
-                                icon: Icon(
-                                  Icons.play_arrow,
                                 ),
-                              ),
-                            ),
-                          ),
-                        );
+                              );
                       },
                     ),
                   );
@@ -105,6 +125,12 @@ class LectureCatalogPage extends StatelessWidget {
         );
       },
     );
+  }
+
+  format_time(var time) {
+    String time_in_min = ((time ~/ 60)).toString();
+    String time_in_sec = (time % 60).toString();
+    return time_in_min + ":" + time_in_sec;
   }
 
   Future<Map<String, dynamic>> getCourseMediaFiles(context) async {
@@ -125,13 +151,12 @@ class LectureCatalogPage extends StatelessWidget {
             Duration(days: 0, hours: 0, minutes: 0, seconds: 0);
         int video_dur = video_duration.inSeconds;
         total_duration = total_duration + video_dur;
-        var video_detail = [video.title, video_dur];
+        var video_detail = [video.title, video_dur, videoId];
         videos.add(video_detail);
       }
 
       var total_videos = videos.length;
       course_detail = {
-        'id': videoId,
         'title': title,
         'videos': videos,
         'total_videos': total_videos,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -49,19 +50,6 @@ class _LecturePlayState extends State<LecturePlay> {
   @override
   Widget build(BuildContext context) {
     String lecture_title = widget.lecture_title;
-    // return Scaffold(
-    //   appBar: AppBar(
-    //     leading: IconButton(
-    //       onPressed: () => Navigator.pop(context),
-    //       icon: Icon(
-    //         Icons.arrow_back,
-    //       ),
-    //     ),
-    //     title: Text(lecture_title),
-    //   ),
-    //   body: Container(),
-    // );
-
     return YoutubePlayerBuilder(
       player: YoutubePlayer(
         controller: controller,
@@ -87,7 +75,85 @@ class _LecturePlayState extends State<LecturePlay> {
           ),
           title: Text(lecture_title),
         ),
-        body: player,
+        body: Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: 20,
+            ),
+            child: StaggeredGrid.count(
+              crossAxisCount: 2,
+              mainAxisSpacing: 2,
+              crossAxisSpacing: 4,
+              children: [
+                StaggeredGridTile.count(
+                  crossAxisCellCount: 2,
+                  mainAxisCellCount: 1,
+                  child: Container(
+                    child: player,
+                  ),
+                ),
+                StaggeredGridTile.count(
+                  crossAxisCellCount: 1,
+                  mainAxisCellCount: 1,
+                  child: Container(
+                    height: 30,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                        30,
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            controller.pause();
+                          },
+                          icon: Icon(Icons.pause),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            controller.play();
+                          },
+                          icon: Icon(Icons.play_arrow),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                StaggeredGridTile.count(
+                  crossAxisCellCount: 1,
+                  mainAxisCellCount: 1,
+                  child: Container(
+                    height: 30,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                        30,
+                      ),
+                    ),
+                    child: IconButton(
+                      onPressed: () {
+                        controller.mute();
+                      },
+                      icon: Icon(
+                        Icons.volume_mute,
+                      ),
+                    ),
+                  ),
+                ),
+                StaggeredGridTile.count(
+                  crossAxisCellCount: 2,
+                  mainAxisCellCount: 1,
+                  child: Container(
+                    height: 30,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(
+                        30,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )),
       ),
     );
   }
