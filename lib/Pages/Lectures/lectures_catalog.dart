@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_tutor_zone/Courses/coursesModel.dart';
 import 'package:smart_tutor_zone/Pages/Lectures/lecture_play.dart';
+import 'package:smart_tutor_zone/Pages/Review/review_page.dart';
 import 'package:smart_tutor_zone/Pages/homePage.dart';
 import 'package:smart_tutor_zone/style.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
@@ -14,6 +15,16 @@ class LectureCatalogPage extends StatelessWidget {
     return Consumer<Course>(
       builder: (context, value, child) {
         return Scaffold(
+          floatingActionButton: FloatingActionButton(
+            focusColor: Color(0xff005af5),
+            backgroundColor: Color(
+              0xff005af5,
+            ),
+            child: Icon(Icons.rate_review_rounded, color: Colors.white),
+            onPressed: () {
+              WidgetStyle().NextScreen(context, ReviewPage());
+            },
+          ),
           appBar: AppBar(
             leading: IconButton(
               onPressed: () {
