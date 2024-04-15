@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -5,10 +7,26 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_tutor_zone/Courses/coursesModel.dart';
+import 'package:smart_tutor_zone/Pages/Models/review_model.dart';
+import 'package:smart_tutor_zone/helperFunction.dart';
+import 'package:smart_tutor_zone/style.dart';
 
-class ReviewPage extends StatelessWidget {
+class ReviewPage extends StatefulWidget {
+  @override
+  State<ReviewPage> createState() => _ReviewPageState();
+}
+
+class _ReviewPageState extends State<ReviewPage> {
   TextEditingController review_controller = TextEditingController();
+
   double course_rating = 0.0;
+  String review_text = "";
+  String category = "";
+
+  String sub_category = "";
+
+  String course = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,8 +62,22 @@ class ReviewPage extends StatelessWidget {
                   mainAxisCellCount: 1,
                   child: Couse_Detail_Box(value: value),
                 ),
-                Write_Review_Box(review_controller: review_controller),
-                Rating_Box(course_rating: course_rating),
+                Write_Review_Box(
+                  review_text: review_text,
+                  onReviewChange: (value) {
+                    setState(() {
+                      review_text = value;
+                    });
+                  },
+                ),
+                Rating_Box(
+                  course_rating: course_rating,
+                  onRatingUpdate: (rating) {
+                    setState(() {
+                      course_rating = rating;
+                    });
+                  },
+                ),
               ],
             ),
           );
@@ -53,8 +85,11 @@ class ReviewPage extends StatelessWidget {
       ),
       floatingActionButton: TextButton(
         onPressed: () {
-          print("The Reivew is = ${review_controller.text}");
-          review_controller.text = " ";
+          update_raview(
+            review_text,
+            course_rating,
+            context,
+          );
         },
         child: Container(
           width: 350,
@@ -84,13 +119,27 @@ class ReviewPage extends StatelessWidget {
       ),
     );
   }
+
+  update_raview(String review_text, double rating, context) async {
+    String? student_name = await helperFunction.getStudentName();
+
+    ReviewCourse(
+        student_name: student_name.toString(),
+        review_text: review_text,
+        rating: rating)
+      ..addReview(context).then((value) {
+        setState(() {
+          review_text = "";
+          rating = 0;
+          Navigator.pop(context);
+        });
+      });
+  }
 }
 
 class Rating_Box extends StatefulWidget {
-  Rating_Box({
-    required this.course_rating,
-  });
-
+  Rating_Box({required this.course_rating, required this.onRatingUpdate});
+  void Function(double) onRatingUpdate;
   double course_rating;
 
   @override
@@ -124,11 +173,7 @@ class _Rating_BoxState extends State<Rating_Box> {
                     Icons.star,
                     color: Colors.amber,
                   ),
-                  onRatingUpdate: (rating) {
-                    setState(() {
-                      widget.course_rating = rating;
-                    });
-                  },
+                  onRatingUpdate: widget.onRatingUpdate,
                 ),
                 Text(
                   "${widget.course_rating}",
@@ -142,12 +187,9 @@ class _Rating_BoxState extends State<Rating_Box> {
 }
 
 class Write_Review_Box extends StatelessWidget {
-  const Write_Review_Box({
-    super.key,
-    required this.review_controller,
-  });
-
-  final TextEditingController review_controller;
+  Write_Review_Box({required this.review_text, required this.onReviewChange});
+  String review_text;
+  void Function(String)? onReviewChange;
 
   @override
   Widget build(BuildContext context) {
@@ -171,7 +213,7 @@ class Write_Review_Box extends StatelessWidget {
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(30)),
               child: TextFormField(
-                controller: review_controller,
+                onChanged: onReviewChange,
                 decoration: InputDecoration(
                   focusedBorder: InputBorder.none,
                   border: InputBorder.none,

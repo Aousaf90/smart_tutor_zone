@@ -17,7 +17,7 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 class CourseDetailPage extends StatefulWidget {
   String course_name;
   String instructure_name;
-  int rating;
+  double rating;
   String price;
   String subCategory;
   String videos_link;

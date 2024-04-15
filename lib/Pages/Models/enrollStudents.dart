@@ -28,17 +28,22 @@ enrollStudent(context) async {
         .get();
     if (querySnapshot.docs.isNotEmpty) {
       var student_database = querySnapshot.docs.first.reference;
-      var student_doc_ref =
-          await student_database.get().then((DocumentSnapshot doc) {
+      var student_doc_ref = await student_database
+          .get()
+          .then((DocumentSnapshot doc) {
         student_data = doc.data() as Map<String, dynamic>;
-      });
+      }).then((value) => print("Student_Enrollment in Process"),
+              onError: (e) =>
+                  print("There was some error in enrollment of student $e "));
+
       List student_courses = student_data['Courses'];
-      if (!student_courses.contains(course_name)) {
-        print("Student Name = ${student_data['name']}");
-        student_courses.add(course_name); // Add course_name to the list
+      if (student_courses.contains(course_name) == true) {
+        student_courses.add(course_name);
+
         await student_database.update({"Courses": student_courses}).then(
             (value) => print("Student DocumentSnapshot successfully updated"),
-            onError: (e) => print("Error updating document $e"));
+            onError: (e) =>
+                print("Error updating document in enrollStudent.dart $e"));
         print("Course Enrolled successfully to Student");
         print("Data for Course $student_email = ${student_database}");
       }

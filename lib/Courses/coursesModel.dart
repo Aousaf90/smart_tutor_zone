@@ -3,12 +3,11 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:smart_tutor_zone/Courses/courseHelper.dart';
-import 'package:smart_tutor_zone/Pages/course_overview.dart';
 
 class Course extends ChangeNotifier {
   String _name = "";
   String _price = "";
-  int _rating = 0;
+  double _rating = 0.0;
   String _tutor = "";
   List _total_number_of_student = [];
   String _category = "";
@@ -23,7 +22,7 @@ class Course extends ChangeNotifier {
       String name,
       String category,
       String price,
-      int rating,
+      double rating,
       String tutor,
       String subCategory,
       String lecture_link,
@@ -45,7 +44,7 @@ class Course extends ChangeNotifier {
       String name,
       String category,
       String price,
-      int rating,
+      double rating,
       String tutor,
       String subCategory,
       String lecture_link,
@@ -58,6 +57,8 @@ class Course extends ChangeNotifier {
     _category = category;
     _subCategory = subCategory;
     _lecture_link = lecture_link;
+    print("Value Set Successfully");
+
     notifyListeners();
   }
 

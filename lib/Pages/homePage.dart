@@ -479,12 +479,13 @@ Future<List> getCourseList() async {
       course_list.add(course[2]);
     }
   }
+
   return course_list;
 }
 
 Future<List<Widget>> getCourListWidget(BuildContext context) async {
   List<Widget> courseListWidget = [];
-  List courseList = await getCourseList(); // Call getCourseList() only once
+  List courseList = await getCourseList();
   List<Future> futures = [];
 
   for (var course in courseList) {
@@ -492,15 +493,20 @@ Future<List<Widget>> getCourListWidget(BuildContext context) async {
   }
 
   List<dynamic> results = await Future.wait(futures);
-
+  int number = 0;
   for (var data in results) {
+    number += 1;
+    if (data['students'] == null) {
+      data['students'] = [];
+    }
     try {
-      Course Cr = Course();
+      double rating = data['rating'].toDouble();
+
       Provider.of<Course>(context, listen: false).setValues(
           data['name'],
           selectedCategory,
           data['price'],
-          data['rating'],
+          rating,
           data['tutor'],
           selected_subcategory,
           data['lectures'],
@@ -511,7 +517,7 @@ Future<List<Widget>> getCourListWidget(BuildContext context) async {
               data['name'],
               selectedCategory,
               data['price'],
-              data['rating'],
+              data['rating'].toDouble(),
               data['tutor'],
               selected_subcategory,
               data['lectures'],
