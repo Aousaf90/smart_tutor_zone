@@ -8,6 +8,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_tutor_zone/Courses/coursesModel.dart';
 import 'package:smart_tutor_zone/Pages/Models/review_model.dart';
+import 'package:smart_tutor_zone/Pages/homePage.dart';
 import 'package:smart_tutor_zone/helperFunction.dart';
 import 'package:smart_tutor_zone/style.dart';
 
@@ -90,6 +91,7 @@ class _ReviewPageState extends State<ReviewPage> {
             course_rating,
             context,
           );
+          WidgetStyle().NextScreen(context, homePage());
         },
         child: Container(
           width: 350,

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:smart_tutor_zone/Courses/coursesModel.dart';
 import 'package:smart_tutor_zone/Pages/Lectures/lecture_play.dart';
 import 'package:smart_tutor_zone/Pages/Review/review_page.dart';
+import 'package:smart_tutor_zone/Pages/Review/show_all_review.dart';
 import 'package:smart_tutor_zone/Pages/homePage.dart';
 import 'package:smart_tutor_zone/style.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
@@ -58,75 +59,119 @@ class LectureCatalogPage extends StatelessWidget {
                         30,
                       ),
                     ),
-                    child: ListView.builder(
-                      itemCount: (total_items == null)
-                          ? 0
-                          : course_data['videos'].length,
-                      itemBuilder: (context, index) {
-                        var video_duration = format_time(
-                          course_data['videos'][index][1],
-                        );
-
-                        return (total_items == null)
-                            ? Container(
-                                child: Center(
-                                  child: Text(
-                                      "There is some problem with the internet"),
-                                ),
-                              )
-                            : Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10),
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 0),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                  height: 80,
-                                  width: double.infinity,
-                                  child: ListTile(
-                                    leading: CircleAvatar(
-                                      backgroundColor: Color(
-                                        0xfff5f9ff,
-                                      ),
-                                      child: Text("${index + 1}"),
-                                      radius: 20,
-                                    ),
-                                    title: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        course_name_widget(
-                                            course_data: course_data,
-                                            index_number: index),
-                                        Text(
-                                          "${video_duration}",
-                                          style: TextStyle(
-                                            fontSize: 10,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    trailing: IconButton(
-                                      color: Color(0xff005af5),
-                                      onPressed: () => WidgetStyle().NextScreen(
-                                        context,
-                                        LecturePlay(
-                                          lecture_title: course_data['videos']
-                                              [index][0],
-                                          videoId: course_data['videos'][index]
-                                              [2],
-                                        ),
-                                      ),
-                                      icon: Icon(
-                                        Icons.play_arrow,
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 600,
+                          child: ListView.builder(
+                            itemCount: (total_items == null)
+                                ? 0
+                                : course_data['videos'].length,
+                            itemBuilder: (context, index) {
+                              var video_duration = format_time(
+                                course_data['videos'][index][1],
                               );
-                      },
+
+                              return (total_items == null)
+                                  ? Container(
+                                      child: Center(
+                                        child: Text(
+                                            "There is some problem with the internet"),
+                                      ),
+                                    )
+                                  : Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10),
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 10, vertical: 0),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                            ),
+                                            height: 80,
+                                            width: double.infinity,
+                                            child: ListTile(
+                                              leading: CircleAvatar(
+                                                backgroundColor: Color(
+                                                  0xfff5f9ff,
+                                                ),
+                                                child: Text("${index + 1}"),
+                                                radius: 20,
+                                              ),
+                                              title: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  course_name_widget(
+                                                      course_data: course_data,
+                                                      index_number: index),
+                                                  Text(
+                                                    "${video_duration}",
+                                                    style: TextStyle(
+                                                      fontSize: 10,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              trailing: IconButton(
+                                                color: Color(0xff005af5),
+                                                onPressed: () =>
+                                                    WidgetStyle().NextScreen(
+                                                  context,
+                                                  LecturePlay(
+                                                    lecture_title:
+                                                        course_data['videos']
+                                                            [index][0],
+                                                    videoId:
+                                                        course_data['videos']
+                                                            [index][2],
+                                                  ),
+                                                ),
+                                                icon: Icon(
+                                                  Icons.play_arrow,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Divider()
+                                        ],
+                                      ),
+                                    );
+                            },
+                          ),
+                        ),
+                        Container(
+                          width: 300,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: Color(0xff005af5),
+                            borderRadius: BorderRadius.circular(
+                              30,
+                            ),
+                          ),
+                          child: GestureDetector(
+                            onTap: () {
+                              WidgetStyle().NextScreen(
+                                context,
+                                ShowAllReviews(),
+                              );
+                            },
+                            child: Center(
+                              child: const Text(
+                                "Show All Reviews,",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 }

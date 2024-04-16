@@ -245,32 +245,6 @@ class _CourseFilterContainerState extends State<CourseFilterContainer> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    TextButton(
-                      onPressed: () {
-                        WidgetStyle().NextScreen(
-                          context,
-                          const allCatagories(),
-                        );
-                      },
-                      child: const Row(
-                        children: [
-                          Text(
-                            "SEE ALL",
-                            style: TextStyle(
-                              color: Color(0xff0051f5),
-                              fontSize: 12,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            size: 20,
-                          )
-                        ],
-                      ),
-                    ),
                   ],
                 ),
                 Container(
@@ -295,27 +269,6 @@ class _CourseFilterContainerState extends State<CourseFilterContainer> {
                       "Sub Category",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {},
-                      child: const Row(
-                        children: [
-                          Text(
-                            "SEE ALL",
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontSize: 12,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            size: 20,
-                          )
-                        ],
                       ),
                     ),
                   ],
@@ -499,6 +452,9 @@ Future<List<Widget>> getCourListWidget(BuildContext context) async {
     if (data['students'] == null) {
       data['students'] = [];
     }
+    if (data['rating_list'] == null) {
+      data['rating_list'] = [];
+    }
     try {
       double rating = data['rating'].toDouble();
 
@@ -510,7 +466,8 @@ Future<List<Widget>> getCourListWidget(BuildContext context) async {
           data['tutor'],
           selected_subcategory,
           data['lectures'],
-          data['students']);
+          data['students'],
+          data['rating_list']);
       GestureDetector viewBoxGesture = GestureDetector(
         onTap: () async {
           Provider.of<Course>(context, listen: false).selectedCourse(
@@ -521,7 +478,8 @@ Future<List<Widget>> getCourListWidget(BuildContext context) async {
               data['tutor'],
               selected_subcategory,
               data['lectures'],
-              data['students']);
+              data['students'],
+              data['rating_list']);
           var courseData =
               Provider.of<Course>(context, listen: false).selectedCourseDetail;
           String student_email = await helperFunction.getStudentEmail() ?? "";

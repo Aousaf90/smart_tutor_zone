@@ -10,6 +10,7 @@ class Course extends ChangeNotifier {
   double _rating = 0.0;
   String _tutor = "";
   List _total_number_of_student = [];
+  List _rating_list = [];
   String _category = "";
   String _subCategory = "";
   String _lecture_link = "";
@@ -26,7 +27,8 @@ class Course extends ChangeNotifier {
       String tutor,
       String subCategory,
       String lecture_link,
-      List total_number_of_student) {
+      List total_number_of_student,
+      List rating_list) {
     _selected_course = {
       'name': name,
       'price': price,
@@ -36,6 +38,7 @@ class Course extends ChangeNotifier {
       'category': category,
       'subCategory': subCategory,
       'lectures': lecture_link,
+      'rating_list': rating_list
     };
     notifyListeners();
   }
@@ -48,7 +51,8 @@ class Course extends ChangeNotifier {
       String tutor,
       String subCategory,
       String lecture_link,
-      List total_number_of_student) {
+      List total_number_of_student,
+      List rating_list) {
     _name = name;
     _price = price;
     _rating = rating;
@@ -57,9 +61,23 @@ class Course extends ChangeNotifier {
     _category = category;
     _subCategory = subCategory;
     _lecture_link = lecture_link;
+    _rating_list = rating_list;
     print("Value Set Successfully");
 
     notifyListeners();
+  }
+
+  void updateReview(double rating, List rating_list) {
+    try {
+      _selected_course = {
+        ..._selected_course, // Keep existing key-value pairs
+        'rating': rating,
+        'rating_list': rating_list,
+      };
+      notifyListeners();
+    } catch (e) {
+      print("Error $e in courseModel.dart");
+    }
   }
 
   Widget viewBox(BuildContext context) {

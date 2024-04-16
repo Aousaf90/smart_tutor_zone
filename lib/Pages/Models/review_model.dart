@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_tutor_zone/Courses/courseHelper.dart';
 import 'package:smart_tutor_zone/Courses/coursesModel.dart';
+import 'package:smart_tutor_zone/Pages/homePage.dart';
+import 'package:smart_tutor_zone/style.dart';
 
 class ReviewCourse {
   String student_name = "";
@@ -42,13 +44,15 @@ class ReviewCourse {
       print("Course Rating = ${course_rating}");
       if (rating_list != null && rating_list.length > 0) {
         course_rating /= 2;
-        rating_list.add(rating_detail);
       }
+      rating_list.add(rating_detail);
       documentReference.update({
         'rating': course_rating,
         "rating_list": rating_list,
       }).then(
-        (value) => print("Document Snpashot successfully updated"),
+        (value) {
+          print("Document Snpashot successfully updated");
+        },
         onError: (e) => print("Error updaing document $e"),
       );
     } catch (e) {
