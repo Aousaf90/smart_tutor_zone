@@ -490,14 +490,7 @@ Future<List<Widget>> getCourListWidget(BuildContext context) async {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => CourseDetailPage(
-                  course_name: courseData['name'],
-                  instructure_name: courseData['tutor'],
-                  price: courseData['price'],
-                  rating: courseData['rating'],
-                  subCategory: courseData['subCategory'],
-                  videos_link: courseData['lectures'],
-                ),
+                builder: (context) => CourseDetailPage(),
               ),
             );
           }

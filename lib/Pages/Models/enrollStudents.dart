@@ -35,9 +35,15 @@ enrollStudent(context) async {
       }).then((value) => print("Student_Enrollment in Process"),
               onError: (e) =>
                   print("There was some error in enrollment of student $e "));
-
-      List student_courses = student_data['Courses'];
-      if (student_courses.contains(course_name) == true) {
+      List student_courses = [];
+      if (student_data['Courses'] != null) {
+        student_courses = student_data['Courses'];
+      }
+      ;
+      print("Student data = ${student_data}");
+      print("Student Course List = ${student_courses}");
+      print("Selected Course = ${course_name}");
+      if (student_courses.contains(course_name) != true) {
         student_courses.add(course_name);
 
         await student_database.update({"Courses": student_courses}).then(
@@ -55,7 +61,10 @@ enrollStudent(context) async {
       },
     );
 
-    List enrolled_students = data['students'];
+    List enrolled_students = [];
+    if (data['students'] != null) {
+      enrolled_students = data['students'];
+    }
     if (enrolled_students.contains(student_email) == false) {
       enrolled_students.add(student_email);
       data['students'] = enrolled_students;

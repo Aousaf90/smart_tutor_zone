@@ -67,8 +67,15 @@ class Course extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateReview(double rating, List rating_list) {
+  void updateReview(double rating, String review_text, String student) {
     try {
+      List rating_list = selectedCourseDetail['rating_list'];
+      Map<String, dynamic> new_entry = {
+        "rating": rating,
+        "review": review_text,
+        "student": student,
+      };
+      rating_list.add(new_entry);
       _selected_course = {
         ..._selected_course, // Keep existing key-value pairs
         'rating': rating,

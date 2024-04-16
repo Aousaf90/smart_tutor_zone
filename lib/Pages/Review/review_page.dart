@@ -1,8 +1,4 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +6,6 @@ import 'package:smart_tutor_zone/Courses/coursesModel.dart';
 import 'package:smart_tutor_zone/Pages/Models/review_model.dart';
 import 'package:smart_tutor_zone/Pages/homePage.dart';
 import 'package:smart_tutor_zone/helperFunction.dart';
-import 'package:smart_tutor_zone/style.dart';
 
 class ReviewPage extends StatefulWidget {
   @override
@@ -85,13 +80,18 @@ class _ReviewPageState extends State<ReviewPage> {
         },
       ),
       floatingActionButton: TextButton(
-        onPressed: () {
-          update_raview(
+        onPressed: () async {
+          String? studen_name = await helperFunction.getStudentName();
+          String student = studen_name!;
+          await update_raview(
             review_text,
             course_rating,
             context,
-          );
-          WidgetStyle().NextScreen(context, homePage());
+          ).then((value) {
+            Provider.of<Course>(context, listen: false)
+                .updateReview(course_rating, review_text, student);
+            Navigator.pop(context);
+          });
         },
         child: Container(
           width: 350,
@@ -122,7 +122,7 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }
 
-  update_raview(String review_text, double rating, context) async {
+  Future update_raview(String review_text, double rating, context) async {
     String? student_name = await helperFunction.getStudentName();
 
     ReviewCourse(
