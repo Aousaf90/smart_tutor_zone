@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/Register.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/userModel.dart';
+import 'package:smart_tutor_zone/Pages/Models/student_model.dart';
 import 'package:smart_tutor_zone/Pages/homePage.dart';
 import 'package:smart_tutor_zone/helperFunction.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -214,6 +216,7 @@ class _LoginPageState extends State<LoginPage> {
       try {
         final userCredential = await auth.signInWithEmailAndPassword(
             email: studentEmail, password: studentPassword);
+
         final studentModel = Student();
         if (rememberMe) {
           helperFunction.saveStudentEmail(studentEmail);
@@ -221,39 +224,43 @@ class _LoginPageState extends State<LoginPage> {
         }
         await cloudFirestore
             .collection("Students")
-            .where('email', isEqualTo: studentEmail)
+            .doc(userCredential.user!.uid)
             .get()
             .then(
           (value) {
-            value.docs.forEach(
-              (element) {
-                setState(
-                  () {
-                    helperFunction.saveStudentName(element['name']);
-                    helperFunction.saveStudentEducation(element['Education']);
-                    helperFunction.savePhoneNumber(element['phoneNumber']);
-                  },
-                );
-                print(
-                    "Student Name In Login Page= ${studentModel.getStudentName()}");
+            Map<String, dynamic> element = value.data() ?? {};
+            StudentModel sm = StudentModel();
+            String name = element['name'];
+            String education = element['Education'];
+            String phone_number = element['phoneNumber'];
+            String uid = element['uid'];
+            List<dynamic> courses = element['Courses'];
+            setState(
+              () {
+                helperFunction.saveStudentName(name);
+                helperFunction.saveStudentEducation(education);
+                helperFunction.savePhoneNumber(phone_number);
+                Provider.of<StudentModel>(context, listen: false).setData(
+                    education, studentEmail, name, phone_number, uid, courses);
               },
             );
-            Navigator.of(context).pop();
-            WidgetStyle().NextScreen(
-              context,
-              const homePage(),
-            );
-          },
-        ).catchError(
-          (error) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text("Error fetching user data: $error"),
-              ),
-            );
-            Navigator.of(context).pop();
           },
         );
+        Navigator.of(context).pop();
+        WidgetStyle().NextScreen(
+          context,
+          const homePage(),
+        );
+        // ).catchError(
+        //   (error) {
+        //     ScaffoldMessenger.of(context).showSnackBar(
+        //       SnackBar(
+        //         content: Text("Error fetching user data: $error"),
+        //       ),
+        //     );
+        //     Navigator.of(context).pop();
+        //   },
+        // );
       } on FirebaseAuthException catch (e) {
         // Show error in Snackbar and stop loading
         ScaffoldMessenger.of(context).showSnackBar(

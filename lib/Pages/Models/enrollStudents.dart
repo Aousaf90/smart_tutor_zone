@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_tutor_zone/Pages/Lectures/lectures_catalog.dart';
+import 'package:smart_tutor_zone/Pages/Models/student_model.dart';
+import 'package:smart_tutor_zone/Pages/homePage.dart';
 import 'package:smart_tutor_zone/style.dart';
 
 String student_email = "";
@@ -45,7 +48,8 @@ enrollStudent(context) async {
       print("Selected Course = ${course_name}");
       if (student_courses.contains(course_name) != true) {
         student_courses.add(course_name);
-
+        Provider.of<StudentModel>(context, listen: false)
+            .updateCourses(course_name);
         await student_database.update({"Courses": student_courses}).then(
             (value) => print("Student DocumentSnapshot successfully updated"),
             onError: (e) =>

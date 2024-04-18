@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:smart_tutor_zone/AuthenticationPage/LoginPage.dart';
 import 'package:smart_tutor_zone/helperFunction.dart';
+import 'package:smart_tutor_zone/style.dart';
 
 class Student {
   String uid = "";
@@ -20,7 +23,8 @@ class Student {
         "name": student_name,
         "phoneNumber": student_PhoneNumber,
         "Education": student_Education,
-        "Courses": []
+        "Courses": [],
+        "uid": uid,
       };
       await studentRef.doc(uid).set(data);
     } on FirebaseException {
@@ -42,5 +46,12 @@ class Student {
 
   Future<String?> getStudentPhNumber() async {
     return await helperFunction.getPhoneNumber();
+  }
+
+  logout(context) {
+    final auth = FirebaseAuth.instance;
+    auth.signOut();
+    helperFunction.deleteStudentData();
+    WidgetStyle().NextScreen(context, const LoginPage());
   }
 }

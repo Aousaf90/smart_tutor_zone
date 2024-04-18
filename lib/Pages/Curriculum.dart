@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:smart_tutor_zone/profile_page.dart';
 import 'package:smart_tutor_zone/style.dart';
-import './profile_page/profile_page.dart';
 
 class Curriculcum extends StatelessWidget {
   @override

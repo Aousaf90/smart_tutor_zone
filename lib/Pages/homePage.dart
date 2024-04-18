@@ -1,15 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/LoginPage.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/userModel.dart';
 import 'package:smart_tutor_zone/Courses/coursesModel.dart';
 import 'package:smart_tutor_zone/Pages/Lectures/lectures_catalog.dart';
-import 'package:smart_tutor_zone/Pages/allCategory.dart';
+import 'package:smart_tutor_zone/Pages/Models/student_model.dart';
 import 'package:smart_tutor_zone/Pages/course_overview.dart';
+
 import 'package:smart_tutor_zone/helperFunction.dart';
+import 'package:smart_tutor_zone/profile_page.dart';
 import 'package:smart_tutor_zone/style.dart';
 import '../Courses/courseHelper.dart';
 
@@ -47,7 +47,6 @@ class _homePageState extends State<homePage> {
     getAllCategories();
     getAllData();
 
-    print("Student Name in home Page = ${studentModel.getStudentName()}");
     return Scaffold(
       body: FutureBuilder(
         future: getAllData(),
@@ -95,8 +94,15 @@ class _homePageState extends State<homePage> {
                           ],
                         ),
                       ),
-                      const Icon(Icons.circle_notifications_outlined,
-                          size: 50, color: Color.fromARGB(255, 79, 72, 122))
+                      IconButton(
+                        icon: Icon(Icons.person, size: 50, color: Colors.black),
+                        onPressed: () => {
+                          WidgetStyle().NextScreen(
+                            context,
+                            ProfilePage(),
+                          ),
+                        },
+                      ),
                     ],
                   )),
                   //Second Container (Search Bar)
@@ -110,13 +116,12 @@ class _homePageState extends State<homePage> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: TextFormField(
+                        onTap: () {
+                          searchCourse();
+                        },
                         decoration: WidgetStyle().textInputDecorator.copyWith(
                               prefixIcon: const Icon(Icons.search),
                               hintText: "Search For",
-                              suffixIcon: const Icon(
-                                Icons.filter_1_outlined,
-                                color: Colors.black,
-                              ),
                             ),
                       ),
                     ),
@@ -139,10 +144,6 @@ class _homePageState extends State<homePage> {
                   ),
                   const SizedBox(height: 30),
                   CourseFilterContainer(),
-                  ElevatedButton(
-                    onPressed: logout,
-                    child: const Text("Logout"),
-                  ),
                 ],
               ),
             );
@@ -152,12 +153,7 @@ class _homePageState extends State<homePage> {
     );
   }
 
-  logout() {
-    final auth = FirebaseAuth.instance;
-    auth.signOut();
-    helperFunction.deleteStudentData();
-    WidgetStyle().NextScreen(context, const LoginPage());
-  }
+  searchCourse() {}
 }
 
 class CourseFilterContainer extends StatefulWidget {
@@ -401,7 +397,7 @@ class _StudentNameSectionState extends State<StudentNameSection> {
           );
         } else {
           return Text(
-            "Hi ${snapshot.data}",
+            "Hi ${Provider.of<StudentModel>(context, listen: false).name_detail[0]}",
             style: WidgetStyle()
                 .mainHeading
                 .copyWith(color: Colors.black, fontWeight: FontWeight.bold),

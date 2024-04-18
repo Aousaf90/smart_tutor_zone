@@ -2,7 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/LoginPage.dart';
+import 'package:smart_tutor_zone/Pages/Models/student_model.dart';
 import 'package:smart_tutor_zone/Pages/homePage.dart';
 import 'package:smart_tutor_zone/helperFunction.dart';
 import './userModel.dart';
@@ -284,6 +286,12 @@ class _RegisterPageState extends State<RegisterPage> {
           helperFunction.saveStudentEducation(studentEducation);
           helperFunction.savePhoneNumber("03061310090");
           helperFunction.saveCourseEnrolled([]);
+          Provider.of<StudentModel>(context, listen: false).setData(
+              studentEducation,
+              studentEmail,
+              studentName,
+              "03061310090",
+              uid, []);
 
           WidgetStyle().NextScreen(context, const homePage());
         }
