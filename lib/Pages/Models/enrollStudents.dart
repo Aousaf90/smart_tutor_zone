@@ -77,6 +77,50 @@ enrollStudent(context) async {
           onError: (e) => print("Error updating document $e"));
       print("Student Enrolled successfully to Courses");
     }
+    showDialog(
+      barrierColor: Colors.white,
+      context: context,
+      builder: (context) {
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: AlertDialog(
+            backgroundColor: Colors.white,
+            title: Image(
+              image: AssetImage("images/person_congrats.png"),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  "Congratulations",
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: AutofillHints.countryName),
+                ),
+                const Text(
+                  "Your Payment Method is successful we are re-directing you to Course Catalog",
+                  style: TextStyle(
+                    fontSize: 15,
+                  ),
+                  softWrap: true,
+                ),
+                CircularProgressIndicator(),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+    Future.delayed(const Duration(seconds: 3), () {
+      WidgetStyle().NextScreen(
+        context,
+        const homePage(),
+      );
+    });
     WidgetStyle().NextScreen(context, LectureCatalogPage());
   } on FirebaseException {
     print("There is some error");

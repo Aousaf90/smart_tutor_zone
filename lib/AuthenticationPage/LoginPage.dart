@@ -260,11 +260,50 @@ class _LoginPageState extends State<LoginPage> {
             );
           },
         );
-        showAlertBox();
-        WidgetStyle().NextScreen(
-          context,
-          const homePage(),
+        showDialog(
+          barrierColor: Colors.white,
+          context: context,
+          builder: (context) {
+            return Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: AlertDialog(
+                backgroundColor: Colors.white,
+                title: Image(
+                  image: AssetImage("images/person_congrats.png"),
+                ),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      "Congratulations",
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: AutofillHints.countryName),
+                    ),
+                    const Text(
+                      "Your Account is  Ready to Use. You will be redirected to the Home Page in a few seconds,",
+                      style: TextStyle(
+                        fontSize: 15,
+                      ),
+                      softWrap: true,
+                    ),
+                    CircularProgressIndicator(),
+                  ],
+                ),
+              ),
+            );
+          },
         );
+        Future.delayed(const Duration(seconds: 3), () {
+          WidgetStyle().NextScreen(
+            context,
+            const homePage(),
+          );
+        });
       } on FirebaseAuthException catch (e) {
         // Show error in Snackbar and stop loading
         ScaffoldMessenger.of(context).showSnackBar(
@@ -272,6 +311,7 @@ class _LoginPageState extends State<LoginPage> {
             content: Text("Firebase Authentication Error: ${e.message}"),
           ),
         );
+
         Navigator.of(context).pop();
       }
     }
@@ -294,7 +334,6 @@ class _LoginPageState extends State<LoginPage> {
         );
       },
     );
-    Future.delayed(Duration(seconds: 3));
   }
 }
 
