@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_tutor_zone/AuthenticationPage/LoginPage.dart';
 import 'package:smart_tutor_zone/Courses/coursesModel.dart';
 import 'package:smart_tutor_zone/Pages/Models/student_model.dart';
 import 'package:smart_tutor_zone/Pages/homePage.dart';
+import 'package:smart_tutor_zone/splash_screen.dart';
 import './AuthenticationPage/Register.dart';
 import './helperFunction.dart';
 
@@ -51,14 +53,13 @@ class _MyAppState extends State<MyApp> {
           scaffoldBackgroundColor: const Color.fromARGB(255, 247, 245, 245),
         ),
         title: 'Main Page',
-        home: _isLoggedIn ? const homePage() : const RegisterPage(),
+        home: SplashScreen(),
         // home: Text("Login Status $_isLoggedIn"),
       ),
     );
   }
 
   void isLoggedIn() {
-    bool loginStatus = false;
     helperFunction.getloginStatus().then((value) {
       setState(() {
         if (value != null) {

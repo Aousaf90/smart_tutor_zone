@@ -22,6 +22,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
+  bool visible_password = true;
   String studentEmail = "";
   String studentPassword = "";
   bool rememberMe = false;
@@ -105,12 +106,24 @@ class _LoginPageState extends State<LoginPage> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: TextFormField(
-                              decoration:
-                                  WidgetStyle().textInputDecorator.copyWith(
-                                        prefixIcon: const Icon(Icons.lock),
-                                        hintText: "Password",
+                              decoration: WidgetStyle()
+                                  .textInputDecorator
+                                  .copyWith(
+                                    prefixIcon: const Icon(Icons.lock),
+                                    hintText: "Password",
+                                    suffixIcon: IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          visible_password = !visible_password;
+                                        });
+                                      },
+                                      icon: Icon(
+                                        Icons.password_rounded,
                                       ),
-                              obscureText: true, // Hide the password text
+                                    ),
+                                  ),
+                              obscureText:
+                                  visible_password, // Hide the password text
                               validator: (value) {
                                 if (value!.isEmpty) {
                                   return "Password should not be empty";
@@ -123,6 +136,7 @@ class _LoginPageState extends State<LoginPage> {
                                   studentPassword = newValue.toString();
                                 });
                               },
+                              obscuringCharacter: "*",
                             ),
                           ),
                         ],
@@ -246,21 +260,11 @@ class _LoginPageState extends State<LoginPage> {
             );
           },
         );
-        Navigator.of(context).pop();
+        showAlertBox();
         WidgetStyle().NextScreen(
           context,
           const homePage(),
         );
-        // ).catchError(
-        //   (error) {
-        //     ScaffoldMessenger.of(context).showSnackBar(
-        //       SnackBar(
-        //         content: Text("Error fetching user data: $error"),
-        //       ),
-        //     );
-        //     Navigator.of(context).pop();
-        //   },
-        // );
       } on FirebaseAuthException catch (e) {
         // Show error in Snackbar and stop loading
         ScaffoldMessenger.of(context).showSnackBar(
@@ -271,6 +275,26 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.of(context).pop();
       }
     }
+  }
+
+  showAlertBox() async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("AlertDialog Title"),
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: [
+                Text("This is a demo alert dialog"),
+                Text("Would you like to approve of this message? "),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+    Future.delayed(Duration(seconds: 3));
   }
 }
 
