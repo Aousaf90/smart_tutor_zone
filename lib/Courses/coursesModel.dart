@@ -43,6 +43,12 @@ class Course extends ChangeNotifier {
     notifyListeners();
   }
 
+  searchCourse() async {
+    List courses = [];
+    courses = await getAllCourses();
+    return courses;
+  }
+
   void setValues(
       String name,
       String category,

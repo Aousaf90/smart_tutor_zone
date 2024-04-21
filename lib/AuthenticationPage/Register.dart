@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/LoginPage.dart';
 import 'package:smart_tutor_zone/Pages/Models/student_model.dart';
+import 'package:smart_tutor_zone/Pages/bottom_navigator_page.dart';
 import 'package:smart_tutor_zone/Pages/homePage.dart';
 import 'package:smart_tutor_zone/helperFunction.dart';
 import './userModel.dart';
@@ -333,7 +334,7 @@ class _RegisterPageState extends State<RegisterPage> {
           Future.delayed(const Duration(seconds: 3), () {
             WidgetStyle().NextScreen(
               context,
-              const homePage(),
+              const PageNavigator(),
             );
           });
           WidgetStyle().NextScreen(context, const homePage());

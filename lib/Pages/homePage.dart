@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/LoginPage.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/userModel.dart';
+import 'package:smart_tutor_zone/Courses/all_courses_provider.dart';
 import 'package:smart_tutor_zone/Courses/coursesModel.dart';
 import 'package:smart_tutor_zone/Pages/Lectures/lectures_catalog.dart';
 import 'package:smart_tutor_zone/Pages/Models/student_model.dart';
@@ -41,14 +42,15 @@ getAllData() async {
 }
 
 class _homePageState extends State<homePage> {
+  int current_page_index = 0;
   @override
   Widget build(BuildContext context) {
     final studentModel = Student();
     getAllCategories();
     getAllData();
 
-    return Scaffold(
-      body: FutureBuilder(
+    return Container(
+      child: FutureBuilder(
         future: getAllData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -172,7 +174,7 @@ class _CourseFilterContainerState extends State<CourseFilterContainer> {
           onPressed: () {
             setState(
               () {
-                subCateogry_List = filterSubCategories(category);
+                subCateogry_List = filterSubCategories(context, category);
                 selectedCategory = category;
               },
             );
@@ -392,7 +394,7 @@ class _StudentNameSectionState extends State<StudentNameSection> {
           return CircularProgressIndicator();
         } else if (snapshot.hasError) {
           return Text(
-            "Hi There",
+            "There",
             style: WidgetStyle().mainHeading,
           );
         } else {
@@ -408,7 +410,7 @@ class _StudentNameSectionState extends State<StudentNameSection> {
   }
 }
 
-filterSubCategories(category) {
+filterSubCategories(context, category) {
   var subCategoryList = [];
   for (var data in courseData) {
     if (data.contains(category)) {
@@ -417,10 +419,14 @@ filterSubCategories(category) {
   }
   var temp = subCategoryList.toSet();
   subCategoryList = temp.toList();
+  Provider.of<AllCoursesProvider>(context, listen: false)
+      .setAllSubCategories(subCategoryList);
+  Provider.of<AllCoursesProvider>(context, listen: false)
+      .setAllCategories(mainCategory_List);
   return subCategoryList;
 }
 
-Future<List> getCourseList() async {
+Future<List> getCourseList(context) async {
   List<String> course_list = [];
   for (var course in courseData) {
     if (course.contains(selectedCategory) &&
@@ -428,13 +434,14 @@ Future<List> getCourseList() async {
       course_list.add(course[2]);
     }
   }
-
+  Provider.of<AllCoursesProvider>(context, listen: false)
+      .setAllCourses(course_list);
   return course_list;
 }
 
 Future<List<Widget>> getCourListWidget(BuildContext context) async {
   List<Widget> courseListWidget = [];
-  List courseList = await getCourseList();
+  List courseList = await getCourseList(context);
   List<Future> futures = [];
 
   for (var course in courseList) {
@@ -442,6 +449,8 @@ Future<List<Widget>> getCourListWidget(BuildContext context) async {
   }
 
   List<dynamic> results = await Future.wait(futures);
+  Provider.of<AllCoursesProvider>(context, listen: false)
+      .setCourseData(results);
   int number = 0;
   for (var data in results) {
     number += 1;
@@ -500,5 +509,7 @@ Future<List<Widget>> getCourListWidget(BuildContext context) async {
       print("Error = $e");
     }
   }
+  Provider.of<AllCoursesProvider>(context, listen: false)
+      .setCourseViewBox(courseListWidget);
   return courseListWidget;
 }

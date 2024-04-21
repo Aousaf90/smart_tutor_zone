@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/LoginPage.dart';
+import 'package:smart_tutor_zone/Pages/bottom_navigator_page.dart';
 import 'package:smart_tutor_zone/Pages/homePage.dart';
 import 'package:smart_tutor_zone/style.dart';
 import './helperFunction.dart';
@@ -68,7 +69,7 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => _isLoggedIn ? homePage() : LoginPage(),
+          builder: (context) => _isLoggedIn ? PageNavigator() : LoginPage(),
         ),
       );
     });

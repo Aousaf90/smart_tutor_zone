@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/Register.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/userModel.dart';
 import 'package:smart_tutor_zone/Pages/Models/student_model.dart';
+import 'package:smart_tutor_zone/Pages/bottom_navigator_page.dart';
 import 'package:smart_tutor_zone/Pages/homePage.dart';
 import 'package:smart_tutor_zone/helperFunction.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -301,7 +302,7 @@ class _LoginPageState extends State<LoginPage> {
         Future.delayed(const Duration(seconds: 3), () {
           WidgetStyle().NextScreen(
             context,
-            const homePage(),
+            const PageNavigator(),
           );
         });
       } on FirebaseAuthException catch (e) {
@@ -364,25 +365,37 @@ class _forgetPasswordButtonState extends State<forgetPasswordButton> {
                 ),
               ),
               child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    TextFormField(
-                      controller: textEditingController,
-                      decoration:
-                          InputDecoration(hintText: "Enter your Email,"),
-                      onChanged: (value) {
-                        setState(() {
-                          email = value.toString();
-                        });
-                      },
-                    ),
-                    TextButton(
-                      onPressed: recoverPassword,
-                      child: Text("Recover Password"),
-                    ),
-                  ],
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      TextFormField(
+                        controller: textEditingController,
+                        decoration:
+                            InputDecoration(hintText: "Enter your Email,"),
+                        onChanged: (value) {
+                          setState(() {
+                            email = value.toString();
+                          });
+                        },
+                      ),
+                      TextButton(
+                        onPressed: recoverPassword,
+                        child: Text("Recover Password",
+                            style: TextStyle(fontSize: 18, color: Colors.blue)),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          "Go Back",
+                          style: TextStyle(fontSize: 15, color: Colors.blue),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );

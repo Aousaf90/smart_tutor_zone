@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_tutor_zone/Courses/coursesModel.dart';
 import 'package:smart_tutor_zone/Pages/Review/review_page.dart';
