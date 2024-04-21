@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:provider/provider.dart';
-import 'package:smart_tutor_zone/AuthenticationPage/LoginPage.dart';
+
 import 'package:smart_tutor_zone/AuthenticationPage/userModel.dart';
 import 'package:smart_tutor_zone/Courses/all_courses_provider.dart';
 import 'package:smart_tutor_zone/Courses/coursesModel.dart';
@@ -21,6 +21,7 @@ class homePage extends StatefulWidget {
 }
 
 final studentModel = Student();
+List search_history = [];
 List mainCategory_List = [];
 List<Course> course_list = [];
 List subCateogry_List = [];
@@ -43,11 +44,118 @@ getAllData() async {
 
 class _homePageState extends State<homePage> {
   int current_page_index = 0;
+  final SearchController controller = SearchController();
+  final TextEditingController searchController = TextEditingController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    searchController.addListener(queryListener);
+    controller.addListener(searchListener);
+  }
+
+  @override
+  void dispose() {
+    searchController.removeListener(queryListener);
+    controller.removeListener(searchListener);
+    searchController.dispose();
+    controller.dispose();
+
+    // TODO: implement dispose
+    super.dispose();
+
+    searchController.dispose();
+  }
+
+  void queryListener() {
+    filterCourse(controller.text);
+  }
+
+  void searchListener() {
+    filterCourse(controller.text);
+  }
+
+  Widget show_all_courses() {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: courseData.length,
+      itemBuilder: (context, index) {
+        Flexible(
+            child: Card(
+          child: Text(courseData[index][2]),
+        ));
+      },
+    );
+  }
+
+  redirectSelectedCourse(selectedCourse) async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Center(child: CircularProgressIndicator());
+      },
+    );
+    Map course_data = await searchCourse(selectedCourse);
+    String student_email = await helperFunction.getStudentEmail() ?? "";
+    Navigator.pop(context);
+    Provider.of<Course>(context, listen: false).selectedCourse(
+        course_data['name'],
+        course_data['category'],
+        course_data['price'],
+        course_data['rating'].toDouble(),
+        course_data['tutor'],
+        course_data['subCategory'],
+        course_data['lectures'],
+        course_data['students'],
+        (course_data['rating_list'] == null) ? [] : course_data['rating_list']);
+
+    if (course_data['students'].contains(student_email)) {
+      WidgetStyle().NextScreen(context, LectureCatalogPage());
+    } else {
+      WidgetStyle().NextScreen(context, CourseDetailPage());
+    }
+  }
+
+  filterCourse(String value) {
+    List search_list = [];
+    for (var course in courseData) {
+      String program = course[2];
+      if (program.toLowerCase().contains(value.toLowerCase())) {
+        // If the program contains the search value, add it to the search_list
+        if (!search_list.contains(program)) {
+          search_list.add(program);
+        }
+      }
+    }
+
+    return Container(
+      height: 600,
+      child: ListView.builder(
+        itemCount: search_list.length,
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            onTap: () {
+              redirectSelectedCourse(search_list[index]);
+            },
+            child: Card(
+                child: Center(
+                    child: Text(
+              search_list[index],
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                fontStyle: FontStyle.italic,
+              ),
+            ))),
+          );
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final studentModel = Student();
-    getAllCategories();
-    getAllData();
 
     return Container(
       child: FutureBuilder(
@@ -110,24 +218,86 @@ class _homePageState extends State<homePage> {
                   //Second Container (Search Bar)
                   const SizedBox(height: 30),
                   Container(
-                    child: Container(
-                      width: double.infinity,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(31, 148, 149, 173),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: TextFormField(
-                        onTap: () {
-                          searchCourse();
-                        },
-                        decoration: WidgetStyle().textInputDecorator.copyWith(
-                              prefixIcon: const Icon(Icons.search),
-                              hintText: "Search For",
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(31, 148, 149, 173),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: SearchAnchor(
+                      searchController: controller,
+                      viewHintText: "Search...",
+                      viewTrailing: [
+                        IconButton(
+                          onPressed: () {
+                            search_history.add(controller.text);
+                            search_history =
+                                search_history.reversed.toSet().toList();
+                            controller.closeView(controller.text);
+                          },
+                          icon: const Icon(Icons.search),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            controller.clear();
+                          },
+                          icon: const Icon(Icons.clear),
+                        ),
+                      ],
+                      builder: (context, controlle) {
+                        return SearchBar(
+                          controller: controlle,
+                          leading: IconButton(
+                            onPressed: () {},
+                            icon: const Icon(Icons.search),
+                          ),
+                          trailing: [
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.mic),
                             ),
-                      ),
+                          ],
+                          hintText: "Search For...",
+                          onTap: () => controlle.openView(),
+                        );
+                      },
+                      suggestionsBuilder: (context, controlle) {
+                        return [
+                          Wrap(
+                            children:
+                                List.generate(search_history.length, (index) {
+                              final item = search_history[index];
+                              return Container(
+                                padding: const EdgeInsets.only(
+                                    left: 4.0, right: 4.0),
+                                child: ChoiceChip(
+                                  label: Text(item),
+                                  selected: item == controlle.text,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(24.0),
+                                    ),
+                                  ),
+                                  onSelected: (value) {
+                                    // search(item);
+                                    controlle.closeView(item);
+                                  },
+                                ),
+                              );
+                            }),
+                          ),
+                          if (controller.text.isNotEmpty) ...[
+                            filterCourse(controller.text),
+                          ]
+
+                          // if (controller.text.isEmpty) ...[
+                          //   const Divider(),
+
+                          // ]
+                        ];
+                      },
                     ),
                   ),
+
                   const SizedBox(height: 30),
                   //Third Container (Discound Page)
                   Container(
@@ -154,8 +324,6 @@ class _homePageState extends State<homePage> {
       ),
     );
   }
-
-  searchCourse() {}
 }
 
 class CourseFilterContainer extends StatefulWidget {

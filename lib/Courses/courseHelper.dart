@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:smart_tutor_zone/Courses/coursesModel.dart';
 
 List course_view_box = [];
+final courseList = [];
+
 Future<Set<String>> getMainCategories() async {
   CollectionReference collectionRef =
       FirebaseFirestore.instance.collection("Courses_Categories");
@@ -75,8 +77,51 @@ getAllCategories() async {
   return course_detail;
 }
 
+Future<Map> searchCourse(String course) async {
+  Map course_data = {};
+  for (var individual_course in courseList) {
+    if (individual_course.contains(course)) {
+      course_data = await getCourseData(
+          individual_course[0], individual_course[1], course);
+      course_data['category'] = individual_course[0];
+      course_data['subCategory'] = individual_course[1];
+    }
+  }
+  return course_data;
+}
+
+courseHelperSendMessage(String category, String subCategory, String course_name,
+    String send_by, String message) {
+  try {
+    DocumentReference documentReference = FirebaseFirestore.instance
+        .doc("/Courses_Categories/$category/$subCategory/$course_name");
+    print("Send BY: ${send_by}");
+    print("Message : ${message}");
+    if (documentReference != null) {
+      DateTime dateTime = DateTime.now();
+      String time = dateTime.toString();
+      print("Docuemnt Ref  = ${documentReference}");
+      documentReference.collection("ChatRoom").add({
+        "sendBy": send_by,
+        "message": message,
+        "sendAt": time,
+      });
+      print("message send successfully");
+    }
+  } catch (e) {
+    print("Error in courseHelper(courseHelperSendMessage) $e");
+  }
+}
+
+Future courseHelperGetCourseChat(
+    String category, String subCategory, String course_name) async {
+  // DocumentReference documentReference = FirebaseFirestore.instance
+  //     .doc("/Courses_Categories/$category/$subCategory/$course_name");
+  // return CollectionReference collectionReference =
+  //     documentReference.collection("ChatRoom");
+}
+
 Future<List> getAllCourses() async {
-  final courseList = [];
   final courseDetail = await getAllCategories();
   var main_category = courseDetail.keys.toList();
   for (var category in main_category) {

@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_tutor_zone/Courses/courseHelper.dart';
 
 class AllCoursesProvider extends ChangeNotifier {
   List _allCourses = [];
@@ -9,7 +10,7 @@ class AllCoursesProvider extends ChangeNotifier {
   List _allsubCategories = [];
   List _addData = [];
   List<Widget> _viewBox = [];
-
+  List _all_course_data = [];
   setAllCourses(List courses) {
     _allCourses = courses;
     notifyListeners();
@@ -17,6 +18,11 @@ class AllCoursesProvider extends ChangeNotifier {
 
   setCourseViewBox(List<Widget> viewBox) {
     _viewBox = viewBox;
+    notifyListeners();
+  }
+
+  setAllCourseData() async {
+    _all_course_data = await getAllCourses();
     notifyListeners();
   }
 

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:smart_tutor_zone/Courses/courseHelper.dart';
 import 'package:smart_tutor_zone/Pages/chat_room/chat_list.dart';
 import 'package:smart_tutor_zone/Pages/homePage.dart';
 import 'package:smart_tutor_zone/Pages/my_courses.dart';
-import 'package:smart_tutor_zone/Pages/search_page.dart';
+
 import 'package:smart_tutor_zone/profile_page.dart';
 
 class PageNavigator extends StatefulWidget {
@@ -14,13 +15,18 @@ class PageNavigator extends StatefulWidget {
 
 class _PageNavigatorState extends State<PageNavigator> {
   int current_page_index = 1;
+
   List pageList = [
     ProfilePage(),
     homePage(),
     ChatListPage(),
-    SearchPage(),
     MyCoursesPage(),
   ];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,11 +58,6 @@ class _PageNavigatorState extends State<PageNavigator> {
                 label: "Chat",
                 icon: Icon(
                   Icons.chat,
-                )),
-            BottomNavigationBarItem(
-                label: "Search",
-                icon: Icon(
-                  Icons.search,
                 )),
             BottomNavigationBarItem(
                 label: "My Courses",
