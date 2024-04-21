@@ -185,11 +185,10 @@ class _CardPaymentState extends State<CardPayment> {
                         String student_email =
                             await helperFunction.getStudentEmail() ?? "";
                         // print("Student Email = ${student_email}");
+
                         setEnrollmentData(
+                          context,
                           student_email,
-                          value.selectedCourseDetail['name'],
-                          value.selectedCourseDetail['category'],
-                          value.selectedCourseDetail['subCategory'],
                         );
                         enrollStudent(context);
                       },

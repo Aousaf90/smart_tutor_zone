@@ -120,7 +120,7 @@ class ProfilePage extends StatelessWidget {
                                           leading: Text("${index + 1}",
                                               style: TextStyle(fontSize: 20)),
                                           title: Text(
-                                            course_catalog[index],
+                                            "${course_catalog[index]['name']}",
                                             style: TextStyle(
                                               fontSize: 20,
                                             ),

@@ -5,15 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/userModel.dart';
 import 'package:smart_tutor_zone/Courses/courseHelper.dart';
 import 'package:smart_tutor_zone/Pages/Models/student_model.dart';
+import 'package:smart_tutor_zone/Pages/homePage.dart';
 
 class courseChatRoom extends StatefulWidget {
-  String course;
+  courseChatRoom({required this.course_detail});
   Map course_detail;
-  String student_name;
-  courseChatRoom(
-      {required this.course,
-      required this.course_detail,
-      required this.student_name});
 
   @override
   State<courseChatRoom> createState() => _courseChatRoomState();
@@ -36,7 +32,7 @@ class _courseChatRoomState extends State<courseChatRoom> {
 
   @override
   Widget build(BuildContext context) {
-    String course_name = this.widget.course;
+    String course_name = widget.course_detail['name'];
     return Scaffold(
       backgroundColor: Color(0xffF5F9FF),
       appBar: AppBar(
@@ -54,9 +50,6 @@ class _courseChatRoomState extends State<courseChatRoom> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                  "Total Students = ${widget.course_detail['students'].length}",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               Divider(),
               SizedBox(height: 10),
               Container(height: 550, child: _buildMessageList()),
@@ -75,7 +68,10 @@ class _courseChatRoomState extends State<courseChatRoom> {
                   ),
                   trailing: IconButton(
                     onPressed: () {
-                      sendMessage(widget.student_name);
+                      sendMessage(
+                          Provider.of<StudentModel>(context, listen: false)
+                              .email_detail[0]);
+                      controller.text = "";
                     },
                     icon: Icon(
                       Icons.send,
@@ -113,7 +109,6 @@ class _courseChatRoomState extends State<courseChatRoom> {
     Map document_data = doc.data() as Map<String, dynamic>;
     String my_email =
         Provider.of<StudentModel>(context, listen: false).email_detail[0];
-    ;
 
     Alignment alignment = (document_data['sendBy'] == my_email)
         ? Alignment.centerRight

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_tutor_zone/Courses/courseHelper.dart';
 import 'package:smart_tutor_zone/Pages/Models/student_model.dart';
 import 'package:smart_tutor_zone/Pages/chat_room/course_chat_page.dart';
 import 'package:smart_tutor_zone/style.dart';
@@ -39,16 +38,19 @@ class ChatListPage extends StatelessWidget {
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(20)),
                             child: ListTile(
-                              title: Text("${value.course_detail[index]}",
+                              title: Text(
+                                  "${value.course_detail[index]['name']}",
                                   style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold)),
+                              subtitle: Text(
+                                  "${value.course_detail[index]['subCategory']}"),
                               trailing: IconButton(
                                 onPressed: () {
-                                  String course_name =
-                                      value.course_detail[index];
-                                  redirectToChatRoom(context, course_name,
-                                      value.email_detail[0]);
+                                  redirectToChatRoom(
+                                      context,
+                                      value.course_detail[index]
+                                          as Map<String, dynamic>);
                                 },
                                 icon: Icon(Icons.arrow_forward,
                                     color: Color(0xff0059F5)),
@@ -70,16 +72,12 @@ class ChatListPage extends StatelessWidget {
 
   redirectToChatRoom(
     context,
-    course_name,
-    student_name,
+    Map<String, dynamic> course_data,
   ) async {
-    Map course_data = await searchCourse(course_name);
     WidgetStyle().NextScreen(
         context,
         courseChatRoom(
-          course: course_name,
           course_detail: course_data,
-          student_name: student_name,
         ));
   }
 }

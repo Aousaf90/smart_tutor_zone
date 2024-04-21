@@ -51,8 +51,8 @@ class StudentModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  updateCourses(String course_name) {
-    _Courses.add(course_name);
+  updateCourses(Map course_data) {
+    _Courses.add(course_data);
     notifyListeners();
   }
 }

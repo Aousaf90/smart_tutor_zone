@@ -1,8 +1,12 @@
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_tutor_zone/Courses/coursesModel.dart';
 import 'package:smart_tutor_zone/Pages/Lectures/lectures_catalog.dart';
 import 'package:smart_tutor_zone/Pages/Models/student_model.dart';
+import 'package:smart_tutor_zone/Pages/bottom_navigator_page.dart';
 import 'package:smart_tutor_zone/Pages/homePage.dart';
 import 'package:smart_tutor_zone/style.dart';
 
@@ -10,19 +14,39 @@ String student_email = "";
 String course_name = "";
 String course_category = "";
 String course_subCategory = "";
+Map _courseDetail = {};
 
 void setEnrollmentData(
-    String email, String course, String category, String sub_category) {
+  context,
+  String email,
+) {
   student_email = email;
-  course_name = course;
-  course_category = category;
-  course_subCategory = sub_category;
+
+  _courseDetail = unmodifiableMapViewToMap(
+      Provider.of<Course>(context, listen: false).selectedCourseDetail);
+  // course_name = course;
+  // course_category = category;
+  // course_subCategory = sub_category;
+}
+
+Map<String, dynamic> unmodifiableMapViewToMap(
+    UnmodifiableMapView<dynamic, dynamic> unmodifiableMap) {
+  Map<String, dynamic> result = {};
+  unmodifiableMap.forEach((key, value) {
+    result[key.toString()] = value;
+  });
+  return result;
 }
 
 enrollStudent(context) async {
   try {
     var data = {};
     var student_data = {};
+    String course_category = _courseDetail['category'];
+    String course_subCategory = _courseDetail['subCategory'];
+    String course_name = _courseDetail['name'];
+    List student_courses = _courseDetail['students'];
+
     var course_database = FirebaseFirestore.instance.doc(
         "/Courses_Categories/$course_category/$course_subCategory/$course_name");
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -42,20 +66,16 @@ enrollStudent(context) async {
       if (student_data['Courses'] != null) {
         student_courses = student_data['Courses'];
       }
-      ;
-      print("Student data = ${student_data}");
-      print("Student Course List = ${student_courses}");
-      print("Selected Course = ${course_name}");
-      if (student_courses.contains(course_name) != true) {
-        student_courses.add(course_name);
+
+      if (student_courses.contains(_courseDetail) != true) {
+        student_courses.add(_courseDetail);
         Provider.of<StudentModel>(context, listen: false)
-            .updateCourses(course_name);
+            .updateCourses(_courseDetail);
+
         await student_database.update({"Courses": student_courses}).then(
             (value) => print("Student DocumentSnapshot successfully updated"),
             onError: (e) =>
                 print("Error updating document in enrollStudent.dart $e"));
-        print("Course Enrolled successfully to Student");
-        print("Data for Course $student_email = ${student_database}");
       }
     }
 
@@ -72,6 +92,17 @@ enrollStudent(context) async {
     if (enrolled_students.contains(student_email) == false) {
       enrolled_students.add(student_email);
       data['students'] = enrolled_students;
+      print("Name = ${data['category']}");
+      Provider.of<Course>(context, listen: false).selectedCourse(
+          data['name'],
+          course_category,
+          data['price'],
+          data['rating'].toDouble(),
+          data['tutor'],
+          course_subCategory,
+          data['lectures'],
+          data['students'],
+          data['rating_list']);
       await course_database.update({'students': enrolled_students}).then(
           (value) => print("DocumentSnapshot successfully updated"),
           onError: (e) => print("Error updating document $e"));
@@ -118,7 +149,7 @@ enrollStudent(context) async {
     Future.delayed(const Duration(seconds: 3), () {
       WidgetStyle().NextScreen(
         context,
-        const homePage(),
+        const PageNavigator(),
       );
     });
     WidgetStyle().NextScreen(context, LectureCatalogPage());

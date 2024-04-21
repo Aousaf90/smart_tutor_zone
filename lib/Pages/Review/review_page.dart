@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
@@ -258,9 +260,10 @@ class Couse_Detail_Box extends StatelessWidget {
             const SizedBox(
               width: 10,
             ),
-            Container(
-              height: 50,
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
               child: Container(
+                height: 50,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -275,7 +278,9 @@ class Couse_Detail_Box extends StatelessWidget {
                     ),
                     Text(
                       value.selectedCourseDetail['name'],
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      softWrap: true,
+                      style:
+                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                     )
                   ],
                 ),
