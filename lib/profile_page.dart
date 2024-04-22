@@ -264,7 +264,6 @@ class _UpdateFieldState extends State<UpdateField> {
                 setState(() {
                   change_data = value;
                 });
-                change_data = value;
               },
             ),
             const SizedBox(
@@ -335,13 +334,13 @@ class _UpdateFieldState extends State<UpdateField> {
         Provider.of<StudentModel>(context, listen: false).uid_detail[0];
 
     if (to_change_value == 'email') {
-      await updateEmail(uid, field);
+      await updateEmail(uid, new_value);
     } else if (to_change_value == "education") {
-      await updateEducation(uid, field);
+      await updateEducation(uid, new_value);
     } else if (to_change_value == "name") {
-      await updateName(uid, field);
+      await updateName(uid, new_value);
     } else if (to_change_value == "phone") {
-      await updatePhoneNumber(uid, field);
+      await updatePhoneNumber(uid, new_value);
     }
   }
 
@@ -387,6 +386,7 @@ class _UpdateFieldState extends State<UpdateField> {
 
   Future updatePhoneNumber(String uid, String phone_number) async {
     try {
+      print("New Number in profile page= ${phone_number}");
       DocumentReference documentReference =
           FirebaseFirestore.instance.doc("/Students/${uid}");
       print("Docuemnt ref = ${documentReference}");

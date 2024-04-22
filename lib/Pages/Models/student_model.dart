@@ -43,6 +43,7 @@ class StudentModel extends ChangeNotifier {
 
   updatePhoneNumber(String phone_number) {
     _phone_number = phone_number;
+    print("New Number = ${phone_number}");
     notifyListeners();
   }
 

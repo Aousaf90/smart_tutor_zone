@@ -26,7 +26,6 @@ class _MyCoursesPageState extends State<MyCoursesPage> {
   @override
   Widget build(BuildContext context) {
     return Consumer<StudentModel>(builder: (context, value, child) {
-      print("TOTAL Number of Courses= ${value.course_detail.length}");
       return SingleChildScrollView(
         child: Container(
           height: 700,

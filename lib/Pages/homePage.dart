@@ -63,8 +63,6 @@ class _homePageState extends State<homePage> {
 
     // TODO: implement dispose
     super.dispose();
-
-    searchController.dispose();
   }
 
   void queryListener() {
@@ -369,11 +367,9 @@ class _CourseFilterContainerState extends State<CourseFilterContainer> {
         sub_category_list_widget.add(
           TextButton(
             onPressed: () async {
-              setState(() {
-                selected_subcategory = subCategory;
-              });
               List<Widget> widgets = await getCourListWidget(context);
               setState(() {
+                selected_subcategory = subCategory;
                 courseListWidget = widgets;
               });
             },

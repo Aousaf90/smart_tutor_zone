@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class LecturePlay extends StatefulWidget {
@@ -17,7 +16,7 @@ class LecturePlay extends StatefulWidget {
 
 class _LecturePlayState extends State<LecturePlay> {
   late YoutubePlayerController controller;
-
+  int volumn = 50;
   @override
   void initState() {
     try {
@@ -79,78 +78,63 @@ class _LecturePlayState extends State<LecturePlay> {
             padding: EdgeInsets.symmetric(
               horizontal: 20,
             ),
-            child: StaggeredGrid.count(
-              crossAxisCount: 2,
-              mainAxisSpacing: 2,
-              crossAxisSpacing: 4,
+            child: Column(
               children: [
-                StaggeredGridTile.count(
-                  crossAxisCellCount: 2,
-                  mainAxisCellCount: 1,
-                  child: Container(
-                    child: player,
-                  ),
-                ),
-                StaggeredGridTile.count(
-                  crossAxisCellCount: 1,
-                  mainAxisCellCount: 1,
-                  child: Container(
-                    height: 30,
+                Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        30,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: player),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      child: IconButton(
+                        onPressed: () {
+                          controller.play();
+                        },
+                        icon: Icon(Icons.play_arrow, size: 40),
                       ),
                     ),
-                    child: Column(
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            controller.pause();
-                          },
-                          icon: Icon(Icons.pause),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            controller.play();
-                          },
-                          icon: Icon(Icons.play_arrow),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                StaggeredGridTile.count(
-                  crossAxisCellCount: 1,
-                  mainAxisCellCount: 1,
-                  child: Container(
-                    height: 30,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        30,
+                    Container(
+                      child: IconButton(
+                        onPressed: () {
+                          controller.pause();
+                        },
+                        icon: Icon(Icons.stop, size: 40),
                       ),
                     ),
-                    child: IconButton(
-                      onPressed: () {
-                        controller.mute();
-                      },
-                      icon: Icon(
-                        Icons.volume_mute,
+                    Container(
+                      child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            volumn += 10;
+                          });
+                          controller.setVolume(volumn);
+                        },
+                        icon: Icon(Icons.volume_up_outlined, size: 40),
                       ),
                     ),
-                  ),
-                ),
-                StaggeredGridTile.count(
-                  crossAxisCellCount: 2,
-                  mainAxisCellCount: 1,
-                  child: Container(
-                    height: 30,
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(
-                        30,
+                    Container(
+                      child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            volumn -= 10;
+                          });
+                          controller.setVolume(volumn);
+                        },
+                        icon: Icon(Icons.volume_down, size: 40),
                       ),
                     ),
-                  ),
+                    Container(
+                      child: IconButton(
+                        onPressed: () {
+                          controller.mute();
+                        },
+                        icon: Icon(Icons.volume_mute_rounded, size: 40),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             )),

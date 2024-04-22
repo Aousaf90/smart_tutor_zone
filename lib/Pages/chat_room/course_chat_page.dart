@@ -30,6 +30,15 @@ class _courseChatRoomState extends State<courseChatRoom> {
     super.dispose();
   }
 
+  sendMessage(String send_by) {
+    courseHelperSendMessage(
+        widget.course_detail['category'],
+        widget.course_detail['subCategory'],
+        widget.course_detail['name'],
+        send_by,
+        controller.text);
+  }
+
   @override
   Widget build(BuildContext context) {
     String course_name = widget.course_detail['name'];
@@ -152,15 +161,6 @@ class _courseChatRoomState extends State<courseChatRoom> {
             )
           ],
         ));
-  }
-
-  sendMessage(String send_by) {
-    courseHelperSendMessage(
-        widget.course_detail['category'],
-        widget.course_detail['subCategory'],
-        widget.course_detail['name'],
-        send_by,
-        controller.text);
   }
 
   Stream<QuerySnapshot> getCourseChat() {

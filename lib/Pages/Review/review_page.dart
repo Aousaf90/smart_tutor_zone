@@ -15,8 +15,7 @@ class ReviewPage extends StatefulWidget {
 }
 
 class _ReviewPageState extends State<ReviewPage> {
-  TextEditingController review_controller = TextEditingController();
-
+  @override
   double course_rating = 0.0;
   String review_text = "";
   String category = "";
