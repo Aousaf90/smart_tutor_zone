@@ -386,10 +386,9 @@ class _UpdateFieldState extends State<UpdateField> {
 
   Future updatePhoneNumber(String uid, String phone_number) async {
     try {
-      print("New Number in profile page= ${phone_number}");
       DocumentReference documentReference =
           FirebaseFirestore.instance.doc("/Students/${uid}");
-      print("Docuemnt ref = ${documentReference}");
+
       await documentReference
           .update({"phoneNumber": phone_number}).then((value) {
         print("Phoen Number updated successfully");

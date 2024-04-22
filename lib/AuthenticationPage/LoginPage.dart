@@ -344,6 +344,13 @@ class forgetPasswordButton extends StatefulWidget {
 }
 
 class _forgetPasswordButtonState extends State<forgetPasswordButton> {
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    textEditingController.dispose();
+    super.dispose();
+  }
+
   TextEditingController textEditingController = TextEditingController();
   String email = "";
   @override

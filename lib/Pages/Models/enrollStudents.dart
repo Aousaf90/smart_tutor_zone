@@ -92,7 +92,6 @@ enrollStudent(context) async {
     if (enrolled_students.contains(student_email) == false) {
       enrolled_students.add(student_email);
       data['students'] = enrolled_students;
-      print("Name = ${data['category']}");
       Provider.of<Course>(context, listen: false).selectedCourse(
           data['name'],
           course_category,

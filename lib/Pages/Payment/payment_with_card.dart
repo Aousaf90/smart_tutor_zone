@@ -184,7 +184,6 @@ class _CardPaymentState extends State<CardPayment> {
                       onPressed: () async {
                         String student_email =
                             await helperFunction.getStudentEmail() ?? "";
-                        // print("Student Email = ${student_email}");
 
                         setEnrollmentData(
                           context,
