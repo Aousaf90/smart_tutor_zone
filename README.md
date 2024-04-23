@@ -5,6 +5,8 @@ Welcome to Smart Tutor Zone, your go-to E-Learning Platform for convenient and f
 ## Getting Started
 
 - **SDK Requirement**: >=3.3.0 < 4.0.0
+- **Android Studio** : Emulator with SDK 33 or above
+
 ## Requirements:
 To run and test this app, you'll need Android Studio and SDK version 33 or above.
 
