@@ -62,6 +62,6 @@ https://www.figma.com/file/oe4bAsU7OWNZULe5kIpsQ2/Saba?type=design&node-id=0%3A1
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-### **_This version maintains a clear structure, improves readability, and ensures the content is aligned for a more visually appealing presentation on GitHub._**
+### **_This version maintains a clear structure, will all working functionallity_**
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
