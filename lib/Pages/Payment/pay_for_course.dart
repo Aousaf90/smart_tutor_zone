@@ -16,6 +16,10 @@ class _CoursePaymentState extends State<CoursePayment> {
   Widget build(BuildContext context) {
     return Consumer<Course>(
       builder: (context, value, child) {
+        String course_name = value.selectedCourseDetail['name'];
+        if (course_name.length > 26) {
+          course_name = course_name.substring(0, 28) + "...";
+        }
         return Scaffold(
           backgroundColor: Color(0xfff5f9ff),
           body: Container(
@@ -76,7 +80,7 @@ class _CoursePaymentState extends State<CoursePayment> {
                                     ),
                                     SizedBox(height: 10),
                                     Text(
-                                      "${value.selectedCourseDetail['name']}",
+                                      course_name,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),

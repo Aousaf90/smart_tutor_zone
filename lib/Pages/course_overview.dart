@@ -14,6 +14,7 @@ import 'package:smart_tutor_zone/Pages/Curriculum.dart';
 import 'package:smart_tutor_zone/Pages/Lectures/lectures_catalog.dart';
 import 'package:smart_tutor_zone/Pages/Payment/pay_for_course.dart';
 import 'package:smart_tutor_zone/helperFunction.dart';
+import 'package:smart_tutor_zone/style.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class CourseDetailPage extends StatefulWidget {
@@ -178,7 +179,16 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                                 Divider(),
                                 Container(
                                   width: double.infinity,
-                                  child: Text("About Section"),
+                                  child: Text("About Section",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                                Container(
+                                  child: Text(
+                                    WidgetStyle().genearlAboutSection(
+                                      value.selectedCourseDetail['name'],
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),

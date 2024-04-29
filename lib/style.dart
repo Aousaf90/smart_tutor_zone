@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 
 class WidgetStyle {
+  String genearlAboutSection(String subject_name) {
+    String about_section =
+        "Embark on a transformative journey with our comprehensive course designed to equip you with " +
+            "essential skills and knowledge in ${subject_name}. Whether you're a novice or an experienced professional," +
+            "applications in ${subject_name}.";
+    return about_section;
+  }
+
   final buttonBoxDecorator = const BoxDecoration(
     color: Colors.blueGrey,
   );

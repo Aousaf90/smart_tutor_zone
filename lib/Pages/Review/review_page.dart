@@ -238,6 +238,10 @@ class Couse_Detail_Box extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String course_name = value.selectedCourseDetail['name'];
+    if (course_name.length > 26) {
+      course_name = course_name.substring(0, 24) + "...";
+    }
     return Container(
         padding: EdgeInsets.symmetric(horizontal: 30),
         decoration: BoxDecoration(
@@ -276,7 +280,7 @@ class Couse_Detail_Box extends StatelessWidget {
                       height: 10,
                     ),
                     Text(
-                      value.selectedCourseDetail['name'],
+                      course_name,
                       softWrap: true,
                       style:
                           TextStyle(fontSize: 12, fontWeight: FontWeight.bold),

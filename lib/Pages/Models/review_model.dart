@@ -41,7 +41,9 @@ class ReviewCourse {
         "/Courses_Categories/${category}/${sub_category}/${course_name}",
       );
       course_rating += this.rating;
-
+      if (rating_list == null) {
+        rating_list = [];
+      }
       if (rating_list != null && rating_list.length > 0) {
         course_rating /= 2;
       }

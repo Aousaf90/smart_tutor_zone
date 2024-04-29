@@ -24,9 +24,6 @@ void setEnrollmentData(
 
   _courseDetail = unmodifiableMapViewToMap(
       Provider.of<Course>(context, listen: false).selectedCourseDetail);
-  // course_name = course;
-  // course_category = category;
-  // course_subCategory = sub_category;
 }
 
 Map<String, dynamic> unmodifiableMapViewToMap(
@@ -86,8 +83,12 @@ enrollStudent(context) async {
     );
 
     List enrolled_students = [];
+    List rating_list = [];
     if (data['students'] != null) {
       enrolled_students = data['students'];
+    }
+    if (data['rating_list'] != null) {
+      rating_list = data['rating_list'];
     }
     if (enrolled_students.contains(student_email) == false) {
       enrolled_students.add(student_email);
@@ -101,7 +102,7 @@ enrollStudent(context) async {
           course_subCategory,
           data['lectures'],
           data['students'],
-          data['rating_list']);
+          rating_list);
       await course_database.update({'students': enrolled_students}).then(
           (value) => print("DocumentSnapshot successfully updated"),
           onError: (e) => print("Error updating document $e"));
