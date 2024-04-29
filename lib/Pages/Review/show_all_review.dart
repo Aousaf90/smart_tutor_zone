@@ -14,6 +14,9 @@ class ShowAllReviews extends StatelessWidget {
       builder: (context, value, child) {
         double rating = value.selectedCourseDetail['rating'];
         List rating_list = value.selectedCourseDetail['rating_list'];
+
+        print("Rating = ${rating}");
+        print("rating_list =${rating_list}");
         return Scaffold(
           backgroundColor: Color(0xfff5f9ff),
           appBar: AppBar(

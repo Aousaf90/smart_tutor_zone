@@ -179,9 +179,12 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                                 Divider(),
                                 Container(
                                   width: double.infinity,
-                                  child: Text("About Section",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold)),
+                                  child: Text(
+                                    "About Section",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                 ),
                                 Container(
                                   child: Text(

@@ -59,6 +59,13 @@ class _courseChatRoomState extends State<courseChatRoom> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Center(
+                child: Text("Chat Room",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blueAccent)),
+              ),
               Divider(),
               SizedBox(height: 10),
               Container(height: 550, child: _buildMessageList()),

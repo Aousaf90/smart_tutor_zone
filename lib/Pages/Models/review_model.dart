@@ -47,7 +47,14 @@ class ReviewCourse {
       if (rating_list != null && rating_list.length > 0) {
         course_rating /= 2;
       }
-      rating_list.add(rating_detail);
+
+      int index = rating_list
+          .indexWhere((element) => element['name'] == course_data['student']);
+      if (index != -1) {
+        rating_list[index] = rating_detail;
+      } else {
+        rating_list.add(rating_detail);
+      }
       documentReference.update({
         'rating': course_rating,
         "rating_list": rating_list,

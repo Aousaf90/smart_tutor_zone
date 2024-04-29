@@ -7,9 +7,7 @@ import 'package:smart_tutor_zone/AuthenticationPage/Register.dart';
 import 'package:smart_tutor_zone/AuthenticationPage/userModel.dart';
 import 'package:smart_tutor_zone/Pages/Models/student_model.dart';
 import 'package:smart_tutor_zone/Pages/bottom_navigator_page.dart';
-import 'package:smart_tutor_zone/Pages/homePage.dart';
 import 'package:smart_tutor_zone/helperFunction.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 
 import '../style.dart';
@@ -40,8 +38,12 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  LottieBuilder.network(
-                      "https://assets1.lottiefiles.com/packages/lf20_wWZd8QJ7Cj.json"),
+                  Container(
+                    child: LottieBuilder.network(
+                      "https://assets1.lottiefiles.com/packages/lf20_wWZd8QJ7Cj.json",
+                      backgroundLoading: true,
+                    ),
+                  ),
                   Container(
                     child: const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

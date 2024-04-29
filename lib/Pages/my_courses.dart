@@ -47,6 +47,10 @@ class _MyCoursesPageState extends State<MyCoursesPage> {
                     subtitle: Text("${course_detail['subCategory']}"),
                     trailing: IconButton(
                       onPressed: () {
+                        print("Course Name = ${course_detail['name']}");
+                        print("Course Rating = ${course_detail['rating']}");
+                        print(
+                            "Course Rating _list  = ${course_detail['rating_list']}");
                         Provider.of<Course>(context, listen: false)
                             .selectedCourse(
                                 course_detail['name'],
