@@ -18,7 +18,7 @@ class _CoursePaymentState extends State<CoursePayment> {
       builder: (context, value, child) {
         String course_name = value.selectedCourseDetail['name'];
         if (course_name.length > 26) {
-          course_name = course_name.substring(0, 28) + "...";
+          course_name = course_name.substring(0, 24) + "...";
         }
         return Scaffold(
           backgroundColor: Color(0xfff5f9ff),

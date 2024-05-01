@@ -19,9 +19,14 @@ class ChatListPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Chat Room",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                Center(
+                  child: const Text(
+                    "Chat Room",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xff0059F5)),
+                  ),
                 ),
                 Divider(),
                 ...[

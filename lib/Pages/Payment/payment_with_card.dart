@@ -182,9 +182,16 @@ class _CardPaymentState extends State<CardPayment> {
                     width: 350,
                     child: TextButton(
                       onPressed: () async {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Center(child: CircularProgressIndicator());
+                          },
+                        );
                         String student_email =
                             await helperFunction.getStudentEmail() ?? "";
-
+// cadetjohn@outlook.com
+// Abcd1234
                         setEnrollmentData(
                           context,
                           student_email,

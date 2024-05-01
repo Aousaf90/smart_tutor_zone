@@ -19,6 +19,13 @@ class Course extends ChangeNotifier {
     return UnmodifiableMapView(_selected_course);
   }
 
+// rating system
+// youtube API integration
+// couse catalog
+// chat room 
+// provider state managemetn
+
+
   void selectedCourse(
       String name,
       String category,

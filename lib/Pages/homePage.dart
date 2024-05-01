@@ -28,10 +28,10 @@ List subCateogry_List = [];
 List course_List = [];
 List<dynamic> courseData = [];
 String selectedCategory = mainCategory_List[0];
-String selected_subcategory = "";
+String selected_subcategory = "Entrepreneurship";
 List<dynamic> currentCourses = [];
 List courseListWidget = [];
-getAllData() async {
+getAllData(context) async {
   courseData = await getAllCourses();
   for (var course in courseData) {
     String MCategory = course[0];
@@ -39,6 +39,8 @@ getAllData() async {
     if (mainCategory_List.contains(MCategory) == false) {
       mainCategory_List.add(MCategory);
     }
+    selectedCategory = mainCategory_List[0];
+    subCateogry_List = filterSubCategories(context, selectedCategory);
   }
 }
 
@@ -157,7 +159,7 @@ class _homePageState extends State<homePage> {
 
     return Container(
       child: FutureBuilder(
-        future: getAllData(),
+        future: getAllData(context),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Container(
@@ -493,45 +495,45 @@ class _CourseFilterContainerState extends State<CourseFilterContainer> {
             ),
           ),
           const SizedBox(height: 30),
-          Container(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      "Top Mentors ",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {},
-                      child: const Row(
-                        children: [
-                          Text(
-                            "SEE ALL",
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontSize: 12,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            size: 20,
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                Container(child: const Text("Stream of Different Mentors"))
-              ],
-            ),
-          ),
+          // Container(
+          //   child: Column(
+          //     children: [
+          //       Row(
+          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //         children: [
+          //           const Text(
+          //             "Top Mentors ",
+          //             style: TextStyle(
+          //               fontWeight: FontWeight.bold,
+          //             ),
+          //           ),
+          //           TextButton(
+          //             onPressed: () {},
+          //             child: const Row(
+          //               children: [
+          //                 Text(
+          //                   "SEE ALL",
+          //                   style: TextStyle(
+          //                     color: Colors.blue,
+          //                     fontSize: 12,
+          //                   ),
+          //                 ),
+          //                 SizedBox(
+          //                   width: 5,
+          //                 ),
+          //                 Icon(
+          //                   Icons.arrow_forward_ios,
+          //                   size: 20,
+          //                 )
+          //               ],
+          //             ),
+          //           )
+          //         ],
+          //       ),
+          //       Container(child: const Text("Stream of Different Mentors"))
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );
@@ -590,7 +592,9 @@ filterSubCategories(context, category) {
   return subCategoryList;
 }
 
-Future<List> getCourseList(context) async {
+Future<List> getCourseList(
+  context,
+) async {
   List<String> course_list = [];
   for (var course in courseData) {
     if (course.contains(selectedCategory) &&
@@ -603,7 +607,9 @@ Future<List> getCourseList(context) async {
   return course_list;
 }
 
-Future<List<Widget>> getCourListWidget(BuildContext context) async {
+Future<List<Widget>> getCourListWidget(
+  BuildContext context,
+) async {
   List<Widget> courseListWidget = [];
   List courseList = await getCourseList(context);
   List<Future> futures = [];

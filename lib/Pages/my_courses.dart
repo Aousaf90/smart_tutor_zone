@@ -2,8 +2,6 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_tutor_zone/Courses/all_courses_provider.dart';
-import 'package:smart_tutor_zone/Courses/courseHelper.dart';
 
 import 'package:smart_tutor_zone/Courses/coursesModel.dart';
 import 'package:smart_tutor_zone/Pages/Lectures/lectures_catalog.dart';
@@ -28,7 +26,8 @@ class _MyCoursesPageState extends State<MyCoursesPage> {
     return Consumer<StudentModel>(builder: (context, value, child) {
       return SingleChildScrollView(
         child: Container(
-          height: 700,
+          color: Color(0xffF5F9FF),
+          height: 800,
           // padding: EdgeInsets.symmetric(horizontal: 10),
           child: ListView.builder(
             itemCount: value.course_detail.length,
@@ -47,10 +46,6 @@ class _MyCoursesPageState extends State<MyCoursesPage> {
                     subtitle: Text("${course_detail['subCategory']}"),
                     trailing: IconButton(
                       onPressed: () {
-                        print("Course Name = ${course_detail['name']}");
-                        print("Course Rating = ${course_detail['rating']}");
-                        print(
-                            "Course Rating _list  = ${course_detail['rating_list']}");
                         Provider.of<Course>(context, listen: false)
                             .selectedCourse(
                                 course_detail['name'],
@@ -62,7 +57,10 @@ class _MyCoursesPageState extends State<MyCoursesPage> {
                                 course_detail['lectures'],
                                 course_detail['students'],
                                 course_detail['rating_list']);
-                        WidgetStyle().NextScreen(context, LectureCatalogPage());
+                        Future.delayed(Duration.zero, () {
+                          WidgetStyle()
+                              .NextScreen(context, LectureCatalogPage());
+                        });
                       },
                       icon: Icon(
                         Icons.arrow_forward,

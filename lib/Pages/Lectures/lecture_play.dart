@@ -166,16 +166,17 @@ class _LecturePlayState extends State<LecturePlay> {
               ),
               Divider(),
               Container(
-                  child: ListTile(
-                title: Text(
-                  "Tutor:",
-                  style: mainTextStyle,
+                child: ListTile(
+                  title: Text(
+                    "Tutor:",
+                    style: mainTextStyle,
+                  ),
+                  subtitle: Text(
+                    "${course_detail['tutor']}",
+                    style: subTextStyle,
+                  ),
                 ),
-                subtitle: Text(
-                  "${course_detail['tutor']}",
-                  style: subTextStyle,
-                ),
-              )),
+              ),
               Container(
                 child: Text(
                   "${course_detail['tutor']} an exemplary educator, is renowned for her unwavering dedication and infectious +" +

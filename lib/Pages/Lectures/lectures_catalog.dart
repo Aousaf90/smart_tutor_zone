@@ -5,7 +5,6 @@ import 'package:smart_tutor_zone/Pages/Lectures/lecture_play.dart';
 import 'package:smart_tutor_zone/Pages/Review/review_page.dart';
 import 'package:smart_tutor_zone/Pages/Review/show_all_review.dart';
 import 'package:smart_tutor_zone/Pages/bottom_navigator_page.dart';
-import 'package:smart_tutor_zone/Pages/homePage.dart';
 import 'package:smart_tutor_zone/style.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 

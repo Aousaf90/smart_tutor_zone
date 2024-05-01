@@ -45,13 +45,14 @@ class _courseChatRoomState extends State<courseChatRoom> {
     return Scaffold(
       backgroundColor: Color(0xffF5F9FF),
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: Color(0xffF5F9FF),
         leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
             },
             icon: Icon(Icons.arrow_back)),
-        title: Text(course_name),
+        title: Text(course_name, style: TextStyle(color: Color(0xff0059F5))),
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 20),

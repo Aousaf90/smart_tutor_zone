@@ -16,6 +16,7 @@ class Student {
     String student_Education = "",
   }) async {
     try {
+      FirebaseFirestore.instance.collection("Students");
       final studentRef = FirebaseFirestore.instance.collection("Students");
       data = {
         "email": student_email,

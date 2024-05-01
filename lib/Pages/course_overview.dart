@@ -13,6 +13,7 @@ import 'package:smart_tutor_zone/Courses/coursesModel.dart';
 import 'package:smart_tutor_zone/Pages/Curriculum.dart';
 import 'package:smart_tutor_zone/Pages/Lectures/lectures_catalog.dart';
 import 'package:smart_tutor_zone/Pages/Payment/pay_for_course.dart';
+import 'package:smart_tutor_zone/Pages/homePage.dart';
 import 'package:smart_tutor_zone/helperFunction.dart';
 import 'package:smart_tutor_zone/style.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
@@ -75,7 +76,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                           children: [
                             IconButton(
                               onPressed: () {
-                                Navigator.pop(context);
+                                WidgetStyle().NextScreen(context, homePage());
                               },
                               icon: Icon(
                                 Icons.arrow_back,
@@ -93,7 +94,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(30)),
                         width: 350,
-                        height: 400,
+                        height: 500,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -188,9 +189,8 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                                 ),
                                 Container(
                                   child: Text(
-                                    WidgetStyle().genearlAboutSection(
-                                      value.selectedCourseDetail['name'],
-                                    ),
+                                    "${WidgetStyle().genearlAboutSection(value.selectedCourseDetail['name'])}",
+                                    softWrap: true,
                                   ),
                                 ),
                               ],
